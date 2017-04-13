@@ -4,6 +4,7 @@ const Faker = require('faker')
 
 const { STRING, DATE } = Sequelize
 
+// const Conn = new Sequelize('postgres://uqgfpeqv:fQ2UfMhPUWNefdqBo6ML2v7JTIKcy9hx@qdjjtnkv.db.elephantsql.com:5432/uqgfpeqv')
 const Conn = new Sequelize('postgres', 'postgres', 'ybduan', { dialect: 'postgres' })
 
 const Person = Conn.define('person', {

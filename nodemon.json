@@ -1,0 +1,13 @@
+{
+  "restartable": "rs",
+  "verbose": true,
+  "execMap": {
+    "js": "node --inspect"
+  },
+  "watch": ["app", "nodemon.json"],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "delay": "300",
+  "ext": "js json"
+}

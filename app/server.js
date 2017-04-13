@@ -1,4 +1,5 @@
 const Koa = require('koa')
+const send = require('koa-send')
 const koaBody = require('koa-bodyparser')
 const koaRouter = require('koa-router')
 const { graphqlKoa, graphiqlKoa } = require('graphql-server-koa')
@@ -9,8 +10,8 @@ const app = new Koa()
 const router = koaRouter()
 
 app.use(koaBody())
-router.get('/', (ctx) => {
-  ctx.body = '<a href="/graphiql">graphql</a>'
+router.get('/', async (ctx) => {
+  await send(ctx, 'public/index.html')
 })
 router.post('/graphql', graphqlKoa({schema}))
 router.get('/graphiql', graphiqlKoa({ endpointURL: '/graphql' }))

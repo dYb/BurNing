@@ -24,8 +24,19 @@ const schema = `
     people(id: Int, email: String): [Person]
     posts(id: Int, title: String): [Post]
   }
+
+  # Functions to create stuff
+  type Mutation {
+    # Add a person
+    addPerson (
+      name: String!
+      email: String!
+    ): Person 
+
+  }
   schema {
     query: Query
+    mutation: Mutation
   }
 `
 
@@ -46,6 +57,14 @@ const resolveFunctions = {
     },
     posts(_, args) {
       return Db.model('post').findAll({ where: args })
+    }
+  },
+  Mutation: {
+    addPerson(_, args) {
+      return Db.model('person').create({
+        name: args.name,
+        email: args.email
+      })
     }
   }
 }
