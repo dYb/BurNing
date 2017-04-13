@@ -5,3 +5,29 @@
   padding: 6px 20px 30px;
   color: yellow;
 }
+form {
+  padding-top: 20px;
+}
+.example-enter {
+  opacity: 0;
+  position: absolute;
+  transform: translate3d(0, 20px, 0);
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition: all 300ms 300ms ease-in-out;
+}
+
+.example-leave {
+  opacity: 1;
+  position: absolute;
+  transform: translate3d(0, 0, 0);
+}
+
+.example-leave.example-leave-active {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  transition: all 300ms ease-in-out;
+}
