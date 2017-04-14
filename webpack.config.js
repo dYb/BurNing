@@ -34,7 +34,7 @@ module.exports = {
   devServer: {
     hot: true,
     // enable HMR on the server
-
+    host: '0.0.0.0',
     port: 3002,
 
     contentBase: resolve(__dirname, './public/dist'),

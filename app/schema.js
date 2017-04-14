@@ -1,4 +1,4 @@
-const { makeExecutableSchema } = require('graphql-tools')
+const { makeExecutableSchema, addErrorLoggingToSchema } = require('graphql-tools')
 
 const Db = require('./db')
 
@@ -68,8 +68,9 @@ const resolveFunctions = {
     }
   }
 }
-
-module.exports = makeExecutableSchema({
+const executableSchema = makeExecutableSchema({
   typeDefs: schema,
   resolvers: resolveFunctions
 })
+addErrorLoggingToSchema(executableSchema, { log: e => console.error(e.stack) })
+module.exports = executableSchema

@@ -18,4 +18,4 @@ router.get('/graphiql', graphiqlKoa({ endpointURL: '/graphql' }))
 
 app.use(router.routes())
 app.use(router.allowedMethods())
-app.listen(3000, () => console.log('Now browser to localhost:3000/graphql'))
+app.listen(3000, '0.0.0.0', () => console.log('Now browser to localhost:3000/graphql'))

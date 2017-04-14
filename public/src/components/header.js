@@ -2,7 +2,7 @@ import React from 'react'
 
 const Header = ({ active, changeTab }) => {
   return (
-    <nav className="navbar navbar-inverse bg-faded bg-primary">
+    <nav className="navbar navbar-toggleable-md navbar-inverse bg-primary">
       <ul className="navbar-nav mr-auto">
         <li className={'nav-item' + (active === 0 ? ' active' : '')} onClick={() => { changeTab(0) }}>
           <a className="nav-link" href="#">Add Person</a>

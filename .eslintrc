@@ -5,6 +5,16 @@
       "anonymous": "always",
       "named": "never",
       "asyncArrow": "ignore"
+    }],
+    "key-spacing": ["error", {
+      "singleLine": {
+        "beforeColon": true,
+        "afterColon": true
+      },
+      "multiLine": {
+        "beforeColon": false,
+        "afterColon": true
+      }
     }]
   }
 }

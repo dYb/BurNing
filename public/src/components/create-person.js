@@ -1,10 +1,6 @@
 import React from 'react'
 
 export default class CreatePerson extends React.Component {
-  addPerson = (e) => {
-    e.preventDefault()
-    console.log(this.name.value, this.email.value)
-  }
   render() {
     return (
       <form>
@@ -18,9 +14,33 @@ export default class CreatePerson extends React.Component {
         </div>
         <div className="form-group row">
           <div className="offset-sm-2 col-sm-10">
-            <button type="submit" className="btn btn-primary" onClick={this.addPerson}>Add</button>
+            <button type="submit" className="btn btn-primary" onClick={(e) => {
+              e.preventDefault()
+              this.props.addPerson({name: this.name.value, email: this.email.value })
+            }}>Add</button>
           </div>
         </div>
+        {
+          this.props.newPerson && (
+            <div className="border">
+              <div className="alert alert-success" role="alert">
+                <strong>Well done!</strong> You successfully create a person.
+              </div>
+              <div className="form-group row">
+                <label htmlFor="example-text-input" className="col-2 col-form-label">ID:</label>
+                <div className="col-10">{this.props.newPerson.id}</div>
+              </div>
+              <div className="form-group row">
+                <label htmlFor="example-text-input" className="col-2 col-form-label">NAME:</label>
+                <div className="col-10">{this.props.newPerson.name}</div>
+              </div>
+              <div className="form-group row">
+                <label htmlFor="example-text-input" className="col-2 col-form-label">EMAIL:</label>
+                <div className="col-10">{this.props.newPerson.email}</div>
+              </div>
+            </div>
+          )
+        }
       </form>
     )
   }

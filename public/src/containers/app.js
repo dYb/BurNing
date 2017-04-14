@@ -22,18 +22,14 @@ class App extends React.Component {
             transitionName="example"
             transitionEnterTimeout={600}
             transitionLeaveTimeout={300} >
-            {this.props.active === 0 ? <CreatePerson key="create" />: <SearchPerson key="search" />}
+            {this.props.active === 0 ? <CreatePerson key="create" newPerson={this.props.newPerson} addPerson={this.props.addPerson} /> : <SearchPerson key="search" />}
           </CSSTransitionGroup>
         </div>
       </div>
     )
   }
 } 
-const mapStateToProps = (state) => {
-  return {
-    active: state.active
-  }
-}
+const mapStateToProps = state => state
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -41,4 +37,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect(mapStateToProps, actions)(App)
