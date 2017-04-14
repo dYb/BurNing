@@ -16,7 +16,7 @@ export default class CreatePerson extends React.Component {
           <div className="offset-sm-2 col-sm-10">
             <button type="submit" className="btn btn-primary" onClick={(e) => {
               e.preventDefault()
-              this.props.addPerson({name: this.name.value, email: this.email.value })
+              this.props.addPerson({ name : this.name.value, email : this.email.value })
             }}>Add</button>
           </div>
         </div>

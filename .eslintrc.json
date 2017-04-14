@@ -1,6 +1,13 @@
 {
   "extends": ["standard", "standard-jsx"],
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
   "rules": {
+    "strict": 0,
     "space-before-function-paren": ["error", {
       "anonymous": "always",
       "named": "never",
@@ -15,6 +22,9 @@
         "beforeColon": false,
         "afterColon": true
       }
-    }]
+    }],
+    "jsx-quotes": [ "error",
+      "prefer-double"
+    ]
   }
 }

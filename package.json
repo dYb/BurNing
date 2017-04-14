@@ -5,10 +5,11 @@
   "scripts": {
     "start": "concurrently \"npm run dev\" \"npm run webpack\"",
     "webpack": "webpack-dev-server",
+    "lint": "eslint . --ext .jsx,.js",
     "dev": "nodemon app/server.js"
   },
-  "engines": { 
-    "node" : ">=7.9.0" 
+  "engines": {
+    "node": ">=7.9.0"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.24.1",
+    "babel-eslint": "6",
     "babel-loader": "^6.4.1",
     "babel-preset-env": "^1.3.3",
     "babel-preset-react": "^6.24.1",

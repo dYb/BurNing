@@ -34,6 +34,41 @@ export function addPerson(person) {
   }
 }
 
+export const SEARCH_PERSON = 'SEARCH_PERSON'
+export function searchPerson(person) {
+  return (dispatch) => {
+    let args = ''
+    if (person.id) {
+      args = 'id: ' + person.id + ','
+    }
+    if (person.email) {
+      args += 'email: "' + person.email + '"'
+    }
+    if (args) {
+      args = `(${args})`
+    }
+    const query = ` 
+      {
+        people${args} {
+          id
+          name
+          email
+        }
+      }
+    `
+    axios.post('/graphql', { query })
+      .then(result => result.data)
+      .then((result) => {
+        if (result.errors) {
+          return Promise.reject(new Error(result.errors[0].message))
+        }
+        dispatch({ type : SEARCH_PERSON, person : result.data.people })
+      })
+      .catch(err => {
+        alert(err.message)
+      })
+  }
+}
 
 function graphqlRequest(data) {
   axios.post('/graphql', { query : mutation })
