@@ -1,16 +1,22 @@
 import React from 'react'
 
-export default class SearchPerson extends React.Component {
+export default class SearchPerson extends React.PureComponent {
   search = (e) => {
     e.preventDefault()
-    console.log(this.name.value, this.email.value)
-    this.props.searchPerson({
-      id: this.id.value,
-      name: this.name.value,
-      email: this.email.value
-    })
+    const data = {}
+    if (+this.id.value) {
+      data['id'] = +this.id.value
+    }
+    if (this.name.value) {
+      data['name'] = this.name.value
+    }
+    if (this.email.value) {
+      data['email'] = this.email.value
+    }
+    this.props.searchPerson(data)
   }
   render() {
+    console.log('search')
     return (
       <form>
         <div className="form-group">
@@ -36,7 +42,8 @@ export default class SearchPerson extends React.Component {
               {
                 this.props.searchedPerson.map(p => (
                   <li key={p.id}>
-                    ID: {p.id} name: {p.name} email: {p.email}
+                    ID: {p.id} name: {p.name} email: {p.email}<br />
+                    POST: {p.post}
                   </li>
                 ))
               }

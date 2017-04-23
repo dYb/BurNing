@@ -6,7 +6,9 @@
     "start": "concurrently \"npm run dev\" \"npm run webpack\"",
     "webpack": "webpack-dev-server",
     "lint": "eslint . --ext .jsx,.js",
-    "dev": "nodemon app/server.js"
+    "lint:fix": "npm run lint -- --fix",
+    "dev": "nodemon app/server.js",
+    "test": "jest"
   },
   "engines": {
     "node": ">=7.9.0"
@@ -35,6 +37,7 @@
     "eslint-plugin-react": "^6.10.3",
     "eslint-plugin-standard": "^3.0.1",
     "faker": "^4.1.0",
+    "jest": "^19.0.2",
     "nodemon": "^1.11.0",
     "react-hot-loader": "next",
     "redux-devtools-extension": "^2.13.0",
@@ -43,12 +46,17 @@
     "webpack-dev-server": "^2.4.2"
   },
   "dependencies": {
+    "apollo-client": "^1.0.4",
     "axios": "^0.16.1",
     "graphql": "^0.9.2",
     "graphql-server-koa": "^0.7.0",
+    "graphql-tag": "^2.0.0",
     "graphql-tools": "^0.11.0",
+    "jsonwebtoken": "^7.3.0",
+    "jwt-decode": "^2.2.0",
     "koa": "^2.2.0",
     "koa-bodyparser": "^4.2.0",
+    "koa-jwt": "^3.2.1",
     "koa-router": "^7.1.1",
     "koa-send": "^4.0.0",
     "lodash": "^4.17.4",
@@ -58,8 +66,10 @@
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.4",
     "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1",
     "react-router-redux": "^5.0.0-alpha.6",
-    "react-transition-group": "^1.1.1",
+    "react-transition-group": "^1.1.2",
+    "recompose": "^0.23.1",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
     "relay": "^0.8.0-1",

@@ -1,32 +1,27 @@
 import axios from 'axios'
-
-export const CHANGE_TAB = 'CHANGE_TAB'
-export function changeTab(active) {
-  return {
-    type: CHANGE_TAB,
-    active
-  }
-}
+import decode from 'jwt-decode'
 
 export const ADD_PERSON = 'ADD_PERSON'
 export function addPerson(person) {
   return (dispatch) => {
     const mutation = ` 
       mutation {
-        addPerson(name: "${person.name}", email: "${person.email}") {
-          id
-          name
-          email
+        addPerson(name: "${person.name}", email: "${person.email}", password: "${person.password}"){
+          message
+          created
         }
       }
     `
-    axios.post('/graphql', { query : mutation })
+    axios.post('/graphql', { query: mutation })
       .then(result => result.data)
       .then((result) => {
         if (result.errors) {
           return Promise.reject(new Error(result.errors[0].message))
         }
-        dispatch({ type : ADD_PERSON, person : result.data.addPerson })
+        dispatch({ type: ADD_PERSON, result: result.data.addPerson })
+        setTimeout(() => {
+          dispatch({ type: ADD_PERSON, result: null })
+        }, 2000)
       })
       .catch(err => {
         alert(err.message)
@@ -36,41 +31,56 @@ export function addPerson(person) {
 
 export const SEARCH_PERSON = 'SEARCH_PERSON'
 export function searchPerson(person) {
-  return (dispatch) => {
-    let args = ''
-    if (person.id) {
-      args = 'id: ' + person.id + ','
-    }
-    if (person.email) {
-      args += 'email: "' + person.email + '"'
-    }
-    if (args) {
-      args = `(${args})`
-    }
+  return (dispatch, getState) => {
     const query = ` 
-      {
-        people${args} {
+      query PeopleInfo($id: Int, $email: String) {
+        people(id: $id, email: $email) {
           id
           name
           email
+          posts {
+            title
+            content
+          }
         }
       }
     `
-    axios.post('/graphql', { query })
-      .then(result => result.data)
+    axios({
+      method: 'post',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getState().token}`
+      },
+      data: {
+        query,
+        variables: {...person}
+      }
+    }).then(result => result.data)
       .then((result) => {
         if (result.errors) {
           return Promise.reject(new Error(result.errors[0].message))
         }
-        dispatch({ type : SEARCH_PERSON, person : result.data.people })
+        dispatch({ type: SEARCH_PERSON, person: result.data.people })
       })
-      .catch(err => {
-        alert(err.message)
-      })
+      // .catch(err => {
+      //   alert(err.message)
+      // })
   }
 }
 
-function graphqlRequest(data) {
-  axios.post('/graphql', { query : mutation })
-    .then(result => result.data)
+export const LOGIN = 'LOGIN'
+export function doLogin(person) {
+  return (dispatch) => {
+    axios.post('/login', { ...person })
+    .then((result) => {
+      dispatch({ type: LOGIN, authToken: decode(result.data) })
+    })
+    .catch(err => alert(err))
+  }
 }
+
+// function graphqlRequest({ query, variables, operationName }) {
+//   axios.post('/graphql', { query: mutation })
+//     .then(result => result.data)
+// }

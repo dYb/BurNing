@@ -4,7 +4,8 @@
   "env": {
     "browser": true,
     "node": true,
-    "es6": true
+    "es6": true,
+    "jest": true
   },
   "rules": {
     "strict": 0,
@@ -12,16 +13,6 @@
       "anonymous": "always",
       "named": "never",
       "asyncArrow": "ignore"
-    }],
-    "key-spacing": ["error", {
-      "singleLine": {
-        "beforeColon": true,
-        "afterColon": true
-      },
-      "multiLine": {
-        "beforeColon": false,
-        "afterColon": true
-      }
     }],
     "jsx-quotes": [ "error",
       "prefer-double"
