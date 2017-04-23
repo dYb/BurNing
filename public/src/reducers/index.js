@@ -1,7 +1,9 @@
 const INIT_STATE = {
   personCreationResult: null,
   searchedPerson: null,
-  authToken: null
+  authToken: null,
+  profile: null,
+  posts: {}
 }
 export default (state = INIT_STATE, action) => {
   switch (action.type) {
@@ -11,11 +13,21 @@ export default (state = INIT_STATE, action) => {
       })
     case 'SEARCH_PERSON':
       return Object.assign({}, state, {
-        searchedPerson: action.person
+        searchedPerson: action.people
       })
-    case 'LOGIN':
+    case 'SET_AUTH_TOKEN':
       return Object.assign({}, state, {
         authToken: action.authToken
+      })
+    case 'FETCH_PROFILE':
+      return Object.assign({}, state, {
+        profile: action.people[0]
+      })
+    case 'FETCH_POST':
+      return Object.assign({}, state, {
+        posts: {
+          [action.post.id]: action.post
+        }
       })
     default:
       return state

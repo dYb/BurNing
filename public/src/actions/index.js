@@ -29,54 +29,95 @@ export function addPerson(person) {
   }
 }
 
-export const SEARCH_PERSON = 'SEARCH_PERSON'
-export function searchPerson(person) {
-  return (dispatch, getState) => {
-    const query = ` 
-      query PeopleInfo($id: Int, $email: String) {
-        people(id: $id, email: $email) {
+function _searchPerson({ id, email, authToken }) {
+  const query = ` 
+    query PeopleInfo($id: Int, $email: String) {
+      people(id: $id, email: $email) {
+        id
+        name
+        email
+        posts {
           id
-          name
-          email
-          posts {
-            title
-            content
-          }
+          title
         }
       }
-    `
-    axios({
-      method: 'post',
-      url: '/graphql',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getState().token}`
-      },
-      data: {
-        query,
-        variables: {...person}
-      }
-    }).then(result => result.data)
-      .then((result) => {
-        if (result.errors) {
-          return Promise.reject(new Error(result.errors[0].message))
-        }
-        dispatch({ type: SEARCH_PERSON, person: result.data.people })
+    }
+  `
+  return axios({
+    method: 'post',
+    url: '/graphql',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken ? authToken.token : ''}`
+    },
+    data: {
+      query,
+      variables: { id, email }
+    }
+  })
+  .then(result => result.data)
+  .then((result) => {
+    if (result.errors) {
+      throw new Error(result.error)
+    }
+    return result.data.people
+  })
+}
+
+export const SEARCH_PERSON = 'SEARCH_PERSON'
+export function searchPerson({ id, email }) {
+  return (dispatch, getState) => {
+    const { authToken } = getState()
+    _searchPerson({ id, email, authToken })
+      .then(people => dispatch({ type: SEARCH_PERSON, people }))
+      .catch(err => {
+        alert(err.message)
       })
-      // .catch(err => {
-      //   alert(err.message)
-      // })
   }
 }
 
-export const LOGIN = 'LOGIN'
+export const SET_AUTH_TOKEN = 'SET_AUTH_TOKEN'
 export function doLogin(person) {
   return (dispatch) => {
     axios.post('/login', { ...person })
     .then((result) => {
-      dispatch({ type: LOGIN, authToken: decode(result.data) })
+      dispatch({
+        type: SET_AUTH_TOKEN,
+        authToken: Object.assign(decode(result.data), { token: result.data })
+      })
     })
     .catch(err => alert(err))
+  }
+}
+
+export function doLogout() {
+  return {
+    type: SET_AUTH_TOKEN,
+    authToken: null
+  }
+}
+
+export const FETCH_PROFILE = 'FETCH_PROFILE'
+export function fetchProfile(id) {
+  return (dispatch, getState) => {
+    const { authToken } = getState()
+    _searchPerson({ id, authToken })
+      .then(people => dispatch({ type: FETCH_PROFILE, people }))
+      .catch(err => {
+        alert(err.message)
+      })
+  }
+}
+
+export const FETCH_POST = 'FETCH_POST'
+export function fetchPost(postId) {
+  return {
+    type: FETCH_POST,
+    post: {
+      id: 1,
+      title: 'title',
+      content: 'content' + postId
+    }
   }
 }
 

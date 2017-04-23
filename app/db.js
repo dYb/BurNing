@@ -38,8 +38,9 @@ const Post = Conn.define('post', {
     type: STRING,
     allowNull: false
   },
-  date: {
-    type: DATE
+  public: {
+    type: BOOLEAN,
+    defaultValue: false
   }
 })
 
@@ -55,7 +56,8 @@ Conn.sync({ force: true }).then(() => {
   }).then((person) => {
     return person.createPost({
       title: `Sample title by ${person.name}`,
-      content: `This is a sample article`
+      content: `This is a sample article`,
+      public: false
     })
   })
   Person.create({
@@ -66,7 +68,8 @@ Conn.sync({ force: true }).then(() => {
   }).then((person) => {
     return person.createPost({
       title: `Sample title by ${person.name}`,
-      content: `This is a sample article`
+      content: `This is a sample article`,
+      public: true
     })
   })
 })

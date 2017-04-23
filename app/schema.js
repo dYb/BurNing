@@ -58,6 +58,7 @@ const schema = `
 const resolveFunctions = {
   Person: {
     posts(person, args, context) {
+      // return person.getPosts()
       return (context.user && person.email === context.user.email)
         ? person.getPosts()
         : null

@@ -29,9 +29,8 @@ const App = () => {
           <Switch pathname={location.pathname} key={location.pathname}>
             {
               routes.map((route, i) => (
-                <Route exact key={i} path={route.path} render={({ location }) => {
-                  console.log('render!!!')
-                  const mapStateToProps = (state, ownProps) => {
+                <Route exact key={i} path={route.path} render={(routeProps) => {
+                  const mapStateToProps = (route.mapStateToProps && route.mapStateToProps(routeProps)) || ((state) => {
                     if (!route.props) return {}
                     const props = route.props.reduce((acc, curr) => {
                       return Object.assign({}, acc, {
@@ -39,15 +38,13 @@ const App = () => {
                       })
                     }, {})
                     return props
-                  }
+                  })
                   const actionCreators = !route.actions ? null : route.actions.reduce((acc, curr) => {
                     return Object.assign({}, acc, {
                       [curr]: actions[curr]
                     })
                   }, {})
-                  const mergeProps = (stateProps, dispatchProps, ownProps) => {
-                    return Object.assign({}, ownProps, stateProps, dispatchProps, { location })
-                  }
+                  const mergeProps = route.mergeProps ? route.mergeProps(routeProps) : null
                   const Connector = connect(mapStateToProps, actionCreators, mergeProps)(route.component)
                   return <Connector />
                 }} />

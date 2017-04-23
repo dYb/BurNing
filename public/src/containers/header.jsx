@@ -9,6 +9,9 @@ const Header = ({ authToken }) => (
     <ul className="navbar-nav mr-auto">
       {
         routes.map(route => {
+          if (!route.name) {
+            return null
+          }
           // 仅管理员及未登录时显示
           if (authToken && !authToken.isAdmin) {
             return null
