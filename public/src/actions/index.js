@@ -23,9 +23,9 @@ export function addPerson(person) {
           dispatch({ type: ADD_PERSON, result: null })
         }, 2000)
       })
-      .catch(err => {
-        alert(err.message)
-      })
+      // .catch(err => {
+      //   alert(err.message)
+      // })
   }
 }
 
@@ -70,9 +70,9 @@ export function searchPerson({ id, email }) {
     const { authToken } = getState()
     _searchPerson({ id, email, authToken })
       .then(people => dispatch({ type: SEARCH_PERSON, people }))
-      .catch(err => {
-        alert(err.message)
-      })
+      // .catch(err => {
+      //   alert(err.message)
+      // })
   }
 }
 
@@ -86,7 +86,7 @@ export function doLogin(person) {
         authToken: Object.assign(decode(result.data), { token: result.data })
       })
     })
-    .catch(err => alert(err))
+    // .catch(err => alert(err))
   }
 }
 
@@ -104,20 +104,53 @@ export function fetchProfile(id) {
     _searchPerson({ id, authToken })
       .then(people => dispatch({ type: FETCH_PROFILE, people }))
       .catch(err => {
-        alert(err.message)
+        // alert(err.message)
       })
   }
 }
 
 export const FETCH_POST = 'FETCH_POST'
-export function fetchPost(postId) {
-  return {
-    type: FETCH_POST,
-    post: {
-      id: 1,
-      title: 'title',
-      content: 'content' + postId
-    }
+export function fetchPost({ id, title }) {
+  return (dispatch, getState) => {
+    const query = `
+      query PostsInfo($id: Int, $title: String) {
+        posts(id: $id, title: $title) {
+          id
+          title
+          outward
+          content
+          person {
+            id
+            name
+            email
+          }
+        }
+      }
+    `
+    const { authToken } = getState()
+    return axios({
+      method: 'post',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken ? authToken.token : ''}`
+      },
+      data: {
+        query,
+        variables: { id, title }
+      }
+    })
+      .then(result => result.data)
+      .then((result) => {
+        if (result.errors) {
+          throw new Error(result.error)
+        }
+        return result.data.posts[0]
+      })
+      .then(post => dispatch({
+        type: FETCH_POST,
+        post
+      }))
   }
 }
 

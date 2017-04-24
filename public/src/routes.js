@@ -1,8 +1,9 @@
 import Home from './components/Home.jsx'
 import CreatePerson from './components/create-person.jsx'
 import SearchPerson from './components/search-person.jsx'
-import Login from './components/login.jsx'
+import CreatePost from './components/create-post.jsx'
 import Profile from './components/profile.jsx'
+import Login from './components/login.jsx'
 import Post from './components/post.jsx'
 
 // path: 路由地址
@@ -36,7 +37,6 @@ const routes = [
     actions: ['searchPerson']
   }, {
     path: '/login',
-    name: 'Login',
     component: Login,
     props: ['authToken'],
     actions: ['doLogin'],
@@ -52,13 +52,21 @@ const routes = [
     props: ['authToken', 'profile'],
     actions: ['fetchProfile', 'doLogout']
   }, {
-    path: '/post/:postId',
+    path: '/post/:id',
     component: Post,
     mapStateToProps: routeProps => state => {
-      const { match: { params } } = routeProps
-      return { post: state.posts ? state.posts[params.postId] : {} }
+      const { match: { params: { id } } } = routeProps
+      return {
+        post: state.posts[id] ? state.posts[id] : { id },
+        authToken: state.authToken
+      }
     },
     actions: ['fetchPost']
+  }, {
+    path: '/create-post',
+    component: CreatePost,
+    props: ['authToken', 'postCreationResult'],
+    actions: ['addPost']
   }
 ]
 export default routes

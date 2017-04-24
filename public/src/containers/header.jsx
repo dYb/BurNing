@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 // import { withRouter } from 'react-router'
-import { NavLink, withRouter } from 'react-router-dom'
+import { Link, NavLink, withRouter } from 'react-router-dom'
 import routes from '../routes.js'
 
 const Header = ({ authToken }) => (
@@ -28,6 +28,10 @@ const Header = ({ authToken }) => (
         })
       }
     </ul>
+    <div className="my-5 my-lg-0">
+      <Link to="/create-post" className="btn btn-outline-success mr-2 my-2 my-sm-2">+ POST</Link> 
+      <Link to="/login" className="btn btn-outline-secondary my-2 my-sm-2">LOGIN</Link>
+    </div>
   </nav>
 )
 

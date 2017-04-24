@@ -38,7 +38,7 @@ const Post = Conn.define('post', {
     type: STRING,
     allowNull: false
   },
-  public: {
+  outward: {
     type: BOOLEAN,
     defaultValue: false
   }
@@ -57,7 +57,7 @@ Conn.sync({ force: true }).then(() => {
     return person.createPost({
       title: `Sample title by ${person.name}`,
       content: `This is a sample article`,
-      public: false
+      outward: false
     })
   })
   Person.create({
@@ -69,7 +69,7 @@ Conn.sync({ force: true }).then(() => {
     return person.createPost({
       title: `Sample title by ${person.name}`,
       content: `This is a sample article`,
-      public: true
+      outward: true
     })
   })
 })

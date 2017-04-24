@@ -29,6 +29,10 @@ export default class Profile extends React.PureComponent {
             <div className="col-10" id="id">{profile.id}</div>
           </div>
           <div className="form-group row">
+            <label className="col-2" htmlFor="name">name</label>
+            <div className="col-10" id="name">{profile.name}</div>
+          </div>
+          <div className="form-group row">
             <label className="col-2" htmlFor="email">email</label>
             <div className="col-10" id="email">{profile.email}</div>
           </div>

@@ -33,6 +33,8 @@ const schema = `
     id: Int
     title: String
     content: String
+    # 是否公开
+    outward: Boolean
     person: Person
   }
 
@@ -59,7 +61,7 @@ const resolveFunctions = {
   Person: {
     posts(person, args, context) {
       // return person.getPosts()
-      return (context.user && person.email === context.user.email)
+      return (context.user && person.id === context.user.id)
         ? person.getPosts()
         : null
     },
@@ -70,6 +72,12 @@ const resolveFunctions = {
   Post: {
     person(post) {
       return post.getPerson()
+    },
+    content(post, args, context) {
+      if (!post.outward && (!context.user || context.user.id !== post.person.id)) {
+        return null
+      }
+      return post.content
     }
   },
   Query: {
