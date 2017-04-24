@@ -38,6 +38,11 @@ const schema = `
     person: Person
   }
 
+  # post creation message
+  type PostCreation {
+    message: String
+    id: Int
+  }
 
   # This is root query
   type Query {
@@ -50,6 +55,9 @@ const schema = `
   type Mutation {
     # Add a person
     addPerson (name: String!, email: String!, password: String!): PersonCreation
+
+    # Add a post
+    addPost (title: String!, content: String!, outward: Boolean): PostCreation
   }
   schema {
     query: Query
@@ -74,7 +82,7 @@ const resolveFunctions = {
       return post.getPerson()
     },
     content(post, args, context) {
-      if (!post.outward && (!context.user || context.user.id !== post.person.id)) {
+      if (!post.outward && (!context.user || context.user.id !== post.personId)) {
         return null
       }
       return post.content
@@ -85,8 +93,23 @@ const resolveFunctions = {
       const people = await Db.model('person').findAll({ where: args })
       return people
     },
-    posts(_, args) {
-      return Db.model('post').findAll({ where: args })
+    posts(_, args, context) {
+      let newArgs = args
+      if (context.user) {
+        Object.assign(newArgs, {
+          $and: [
+            { personId: context.user.id },
+            {
+              $or: [
+                { outward: true }
+              ]
+            }
+          ]
+        })
+      } else {
+        Object.assign(newArgs, { outward: true })
+      }
+      return Db.model('post').findAll({ where: newArgs })
     }
   },
   Mutation: {
@@ -109,6 +132,15 @@ const resolveFunctions = {
             created: false
           }
         })
+    },
+    addPost(_, args, context) {
+      if (!context.user) {
+        throw new Error('Unauthorized')
+      }
+      return Db.model('post')
+        .create(Object.assign({}, args, {
+          personId: context.user.id
+        }))
     }
   }
 }

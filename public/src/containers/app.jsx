@@ -44,8 +44,7 @@ const App = () => {
                       [curr]: actions[curr]
                     })
                   }, {})
-                  const mergeProps = route.mergeProps ? route.mergeProps(routeProps) : null
-                  const Connector = connect(mapStateToProps, actionCreators, mergeProps)(route.component)
+                  const Connector = connect(mapStateToProps, actionCreators)(route.component)
                   return <Connector />
                 }} />
               ))

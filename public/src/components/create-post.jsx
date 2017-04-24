@@ -29,16 +29,20 @@ export default class CreatePost extends React.PureComponent {
           <label htmlFor="content">Content</label>
           <textarea type="text" className="form-control" ref={(input) => { this.content = input }} id="content" placeholder="Content" />
         </div>
+        <div className="form-group">
+          <label>
+            <input type="checkbox" ref={(input) => { this.outward = input }} /> Public <small className="form-text text-muted">Checked can be accessed by others.</small>
+          </label>
+        </div>
         <div className="form-group row">
           <div className="col-sm-10">
             <button type="submit" className="btn btn-success btn-lg" onClick={(e) => {
               e.preventDefault()
               const title = this.title.value
               const content = this.content.value
-              if (!title || !title) return
-              addPost({ title, content })
-              this.title.value = ''
-              this.content.value = ''
+              const outward = this.outward.checked
+              if (!title || !content) return
+              addPost({ title, content, outward })
             }}>Add</button>
             <button type="reset" className="btn btn-secondary btn-lg ml-2" onClick={(e) => {
             }}>Reset</button>

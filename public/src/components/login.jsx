@@ -15,7 +15,7 @@ export default class Login extends React.PureComponent {
     const { authToken, location } = this.props
     const from = location.state ? location.state.from : { pathname: '/' }
 
-    if (authToken && authToken.isAdmin) {
+    if (authToken) {
       return <Redirect to={from} />
     }
     return (

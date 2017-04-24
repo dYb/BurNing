@@ -1,11 +1,14 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
-const Forbidden = ({ history }) => (
+const Forbidden = ({ history, location: { pathname } }) => (
   <div style={{marginTop: '20px'}}>
     <div>
       <h2>403 ~ Forbidden</h2>
-      <Link to="/login" className="btn btn-lg btn-success">LOGIN TO VIEW</Link>
+      <button onClick={(e) => {
+        e.preventDefault()
+        history.replace('/login', { from: { pathname } })
+      }} className="btn btn-lg btn-success">LOGIN TO VIEW</button>
       <button onClick={(e) => {
         if (history.length < 1) {
           history.push('/')
@@ -17,4 +20,4 @@ const Forbidden = ({ history }) => (
   </div>
 )
 
-export default Forbidden
+export default withRouter(Forbidden)

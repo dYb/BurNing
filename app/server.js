@@ -14,7 +14,6 @@ const router = koaRouter()
 
 app.use(koaBody()).use(koaJWT({ secret: 'NETEASE', passthrough: true }))
 
-
 router.get('*', async (ctx, next) => {
   if (ctx.path.endsWith('graphiql')) {
     await next()

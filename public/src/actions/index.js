@@ -16,12 +16,9 @@ export function addPerson(person) {
       .then(result => result.data)
       .then((result) => {
         if (result.errors) {
-          return Promise.reject(new Error(result.errors[0].message))
+          throw new Error(result.errors[0].message)
         }
         dispatch({ type: ADD_PERSON, result: result.data.addPerson })
-        setTimeout(() => {
-          dispatch({ type: ADD_PERSON, result: null })
-        }, 2000)
       })
       // .catch(err => {
       //   alert(err.message)
@@ -58,7 +55,7 @@ function _searchPerson({ id, email, authToken }) {
   .then(result => result.data)
   .then((result) => {
     if (result.errors) {
-      throw new Error(result.error)
+      throw new Error(result.errors)
     }
     return result.data.people
   })
@@ -103,27 +100,69 @@ export function fetchProfile(id) {
     const { authToken } = getState()
     _searchPerson({ id, authToken })
       .then(people => dispatch({ type: FETCH_PROFILE, people }))
-      .catch(err => {
-        // alert(err.message)
-      })
+      // .catch(err => {
+      //   alert(err.message)
+      // })
   }
+}
+
+function _fetchPost({ id, title, authToken }) {
+  const query = `
+    query PostsInfo($id: Int, $title: String) {
+      posts(id: $id, title: $title) {
+        id
+        title
+        outward
+        content
+        person {
+          id
+          name
+          email
+        }
+      }
+    }
+  `
+  return axios({
+    method: 'post',
+    url: '/graphql',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken ? authToken.token : ''}`
+    },
+    data: {
+      query,
+      variables: { id, title }
+    }
+  })
+    .then(result => result.data)
+    .then((result) => {
+      if (result.errors) {
+        throw new Error(result.error)
+      }
+      return result.data.posts
+    })
 }
 
 export const FETCH_POST = 'FETCH_POST'
 export function fetchPost({ id, title }) {
   return (dispatch, getState) => {
-    const query = `
-      query PostsInfo($id: Int, $title: String) {
-        posts(id: $id, title: $title) {
+    const { authToken } = getState()
+    _fetchPost({ id, title, authToken })
+      .then(posts => posts && posts[0] && dispatch({
+        type: FETCH_POST,
+        post: posts[0]
+      }))
+  }
+}
+
+export const ADD_POST = 'ADD_POST'
+export function addPost(post) {
+  return (dispatch, getState) => {
+    const mutation = `
+      mutation AddPost($title: String!, $content: String!, $outward: Boolean) {
+        addPost(title: $title, content: $content, outward: $outward) {
           id
-          title
-          outward
-          content
-          person {
-            id
-            name
-            email
-          }
+          message
         }
       }
     `
@@ -136,24 +175,31 @@ export function fetchPost({ id, title }) {
         'Authorization': `Bearer ${authToken ? authToken.token : ''}`
       },
       data: {
-        query,
-        variables: { id, title }
+        query: mutation,
+        variables: {...post}
       }
     })
       .then(result => result.data)
       .then((result) => {
         if (result.errors) {
-          throw new Error(result.error)
+          throw new Error(result.errors[0].message)
         }
-        return result.data.posts[0]
+        dispatch({ type: ADD_POST, result: result.data.addPost })
       })
-      .then(post => dispatch({
-        type: FETCH_POST,
-        post
-      }))
   }
 }
 
+export const FETCH_POST_LIST = 'FETCH_POST_LIST'
+export function fetchPostList() {
+  return (dispatch, getState) => {
+    const { authToken } = getState()
+    _fetchPost({ authToken })
+      .then(posts => posts && dispatch({
+        type: FETCH_POST_LIST,
+        posts
+      }))
+  }
+}
 // function graphqlRequest({ query, variables, operationName }) {
 //   axios.post('/graphql', { query: mutation })
 //     .then(result => result.data)

@@ -2,6 +2,7 @@ import Home from './components/Home.jsx'
 import CreatePerson from './components/create-person.jsx'
 import SearchPerson from './components/search-person.jsx'
 import CreatePost from './components/create-post.jsx'
+import PostList from './components/post-list.jsx'
 import Profile from './components/profile.jsx'
 import Login from './components/login.jsx'
 import Post from './components/post.jsx'
@@ -14,7 +15,6 @@ import Post from './components/post.jsx'
 // props: 由mapStatetoProps转换
 // actions: 由mapDispatchtoProps转换
 // mapStateToProps: 返回一个函数（参数{ location, match, history }），为connect函数的第一参数
-// mergeProps: : 返回一个函数（参数{ location, match, history }），为connect函数的第三参数
 
 const routes = [
   {
@@ -38,16 +38,17 @@ const routes = [
   }, {
     path: '/login',
     component: Login,
-    props: ['authToken'],
-    actions: ['doLogin'],
-    hideWhenLogin: true,
-    mergeProps: routeProps => (stateProps, dispatchProps, ownProps) => {
+    mapStateToProps: routeProps => state => {
       const { location } = routeProps
-      return Object.assign({}, ownProps, stateProps, dispatchProps, { location })
-    }
+      return {
+        authToken: state.authToken,
+        location
+      }
+    },
+    actions: ['doLogin'],
+    hideWhenLogin: true
   }, {
     path: '/profile',
-    name: 'Profile',
     component: Profile,
     props: ['authToken', 'profile'],
     actions: ['fetchProfile', 'doLogout']
@@ -55,10 +56,11 @@ const routes = [
     path: '/post/:id',
     component: Post,
     mapStateToProps: routeProps => state => {
-      const { match: { params: { id } } } = routeProps
+      const { match: { params: { id } }, location } = routeProps
       return {
         post: state.posts[id] ? state.posts[id] : { id },
-        authToken: state.authToken
+        authToken: state.authToken,
+        location
       }
     },
     actions: ['fetchPost']
@@ -67,6 +69,12 @@ const routes = [
     component: CreatePost,
     props: ['authToken', 'postCreationResult'],
     actions: ['addPost']
+  }, {
+    path: '/post-list',
+    component: PostList,
+    name: 'Post List',
+    props: ['postList'],
+    actions: ['fetchPostList']
   }
 ]
 export default routes

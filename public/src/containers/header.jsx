@@ -8,7 +8,7 @@ const Header = ({ authToken }) => (
   <nav className="navbar navbar-toggleable-md navbar-inverse bg-primary">
     <ul className="navbar-nav mr-auto">
       {
-        routes.map(route => {
+        routes.map((route) => {
           if (!route.name) {
             return null
           }
@@ -29,8 +29,12 @@ const Header = ({ authToken }) => (
       }
     </ul>
     <div className="my-5 my-lg-0">
-      <Link to="/create-post" className="btn btn-outline-success mr-2 my-2 my-sm-2">+ POST</Link> 
-      <Link to="/login" className="btn btn-outline-secondary my-2 my-sm-2">LOGIN</Link>
+      <Link to="/create-post" className="btn btn-outline-success mr-2 my-2 my-sm-2">+ POST</Link>
+      {
+        !authToken
+        ? <Link to="/login" className="btn btn-outline-secondary my-2 my-sm-2">LOGIN</Link>
+        : <Link to="/profile" className="btn btn-outline-secondary ml-2 my-sm-2">PROFILE</Link>
+      }
     </div>
   </nav>
 )

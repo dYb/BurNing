@@ -29,6 +29,14 @@ export default (state = INIT_STATE, action) => {
           [action.post.id]: action.post
         }
       })
+    case 'FETCH_POST_LIST':
+      return Object.assign({}, state, {
+        postList: action.posts
+      })
+    case 'ADD_POST':
+      return Object.assign({}, state, {
+        postCreationResult: action.result
+      })
     default:
       return state
   }

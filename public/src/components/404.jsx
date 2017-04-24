@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom'
 
 const NotFound = ({ history }) => (
   <div style={{marginTop: '20px'}}>
@@ -15,4 +16,4 @@ const NotFound = ({ history }) => (
   </div>
 )
 
-export default NotFound
+export default withRouter(NotFound)
