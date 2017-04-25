@@ -19,7 +19,7 @@ export default class Post extends React.PureComponent {
     const { title, content, outward, person } = (post || {})
     const { id, name, email } = (person || {})
     // 文章拥有者 && 加载过数据 && 仍然没有内容
-    if (authToken.id === id && this.state.loaded && !content) {
+    if (authToken && authToken.id === id && this.state.loaded && !content) {
       return <NotFound />
     }
     // 不是公开的 && 不是文章拥有者

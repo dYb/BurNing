@@ -97,13 +97,9 @@ const resolveFunctions = {
       let newArgs = args
       if (context.user) {
         Object.assign(newArgs, {
-          $and: [
+          $or: [
             { personId: context.user.id },
-            {
-              $or: [
-                { outward: true }
-              ]
-            }
+            { outward: true }
           ]
         })
       } else {
