@@ -60,16 +60,18 @@ Conn.sync({ force: true }).then(() => {
       outward: false
     })
   })
-  Person.create({
-    name: 'dyb',
-    email: 'dyb@gmail.com',
-    password: '123456',
-    isAdmin: false
-  }).then((person) => {
-    return person.createPost({
-      title: `Sample title by ${person.name}`,
-      content: `This is a sample article`,
-      outward: true
+  times(10, (i) => {
+    Person.create({
+      name: 'name ' + i,
+      email: 'dyb' + i + '@gmail.com',
+      password: '123456',
+      isAdmin: false
+    }).then((person) => {
+      return person.createPost({
+        title: `Sample title by ${person.name}`,
+        content: `This is a sample article`,
+        outward: i % 2
+      })
     })
   })
 })

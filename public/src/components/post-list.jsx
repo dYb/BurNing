@@ -15,7 +15,10 @@ export default class PostList extends React.Component {
       <ul>
         {
           postList.map(post => (
-            <li key={post.id}><Link to={'/post/' + post.id}>{post.title}</Link></li>
+            <li key={post.id}><Link to={{
+              pathname: '/post/' + post.id,
+              state: { post }
+            }}>{post.title}</Link></li>
           ))
         }
       </ul>

@@ -1,14 +1,14 @@
 import React from 'react'
-import { withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 
 const Forbidden = ({ history, location: { pathname } }) => (
   <div style={{marginTop: '20px'}}>
     <div>
       <h2>403 ~ Forbidden</h2>
-      <button onClick={(e) => {
-        e.preventDefault()
-        history.replace('/login', { from: { pathname } })
-      }} className="btn btn-lg btn-success">LOGIN TO VIEW</button>
+      <Link to={{
+        pathname: '/login',
+        state: { from: { pathname } }
+      }} className="btn btn-lg btn-success">LOGIN TO VIEW</Link>
       <button onClick={(e) => {
         if (history.length < 1) {
           history.push('/')

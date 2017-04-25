@@ -5,9 +5,9 @@ import NotFound from './404.jsx'
 export default class Post extends React.PureComponent {
   state = { loaded: false }
   componentDidMount() {
-    const { post, fetchPost, authToken } = this.props
+    const { post, fetchPost } = this.props
     const { id, content } = post || {}
-    if (!content && authToken) {
+    if (!content) {
       fetchPost({ id: +id })
       this.setState({
         loaded: true
@@ -16,12 +16,14 @@ export default class Post extends React.PureComponent {
   }
   render() {
     const { post, authToken } = this.props
-    const { title, content, outward, person } = post || {}
-    const { id, name, email } = person || {}
-    if (this.state.loaded && !content) {
+    const { title, content, outward, person } = (post || {})
+    const { id, name, email } = (person || {})
+    // 文章拥有者 && 加载过数据 && 仍然没有内容
+    if (authToken.id === id && this.state.loaded && !content) {
       return <NotFound />
     }
-    if (!outward && (!authToken || authToken.id !== id) && !this.state.loaded) {
+    // 不是公开的 && 不是文章拥有者
+    if (!outward && (!authToken || authToken.id !== id)) {
       return <Fobidden />
     }
     return (

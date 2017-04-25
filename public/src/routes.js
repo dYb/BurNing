@@ -57,8 +57,9 @@ const routes = [
     component: Post,
     mapStateToProps: routeProps => state => {
       const { match: { params: { id } }, location } = routeProps
+      const { post } = location.state || { id }
       return {
-        post: state.posts[id] ? state.posts[id] : { id },
+        post: state.posts[id] ? state.posts[id] : post,
         authToken: state.authToken,
         location
       }
