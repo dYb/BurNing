@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 const { times } = require('lodash')
 const Faker = require('faker')
 
-const { STRING, BOOLEAN } = Sequelize
+const { ARRAY, RANGE, INTEGER, STRING, BOOLEAN } = Sequelize
 
 // const Conn = new Sequelize('postgres://uqgfpeqv:fQ2UfMhPUWNefdqBo6ML2v7JTIKcy9hx@qdjjtnkv.db.elephantsql.com:5432/uqgfpeqv')
 const Conn = new Sequelize('postgres', 'postgres', 'ybduan', { dialect: 'postgres' })
@@ -41,6 +41,10 @@ const Post = Conn.define('post', {
   outward: {
     type: BOOLEAN,
     defaultValue: false
+  },
+  receivers: {
+    type: ARRAY(INTEGER),
+    defaultValue: []
   }
 })
 
@@ -70,7 +74,8 @@ Conn.sync({ force: true }).then(() => {
       return person.createPost({
         title: `Sample title by ${person.name}`,
         content: `This is a sample article`,
-        outward: i % 2
+        outward: i % 2 === 0,
+        receivers: [i % 2]
       })
     })
   })

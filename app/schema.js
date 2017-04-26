@@ -35,7 +35,10 @@ const schema = `
     content: String
     # 是否公开
     outward: Boolean
+    # 创建者
     person: Person
+    # 允许查看的人
+    receivers: [Int]
   }
 
   # post creation message
@@ -82,7 +85,8 @@ const resolveFunctions = {
       return post.getPerson()
     },
     content(post, args, context) {
-      if (!post.outward && (!context.user || context.user.id !== post.personId)) {
+      const userId = context.user ? context.user.id : null
+      if (!post.outward && (userId !== post.personId || !post.receivers || !post.receivers.contains(userId))) {
         return null
       }
       return post.content
@@ -99,6 +103,7 @@ const resolveFunctions = {
         Object.assign(newArgs, {
           $or: [
             { personId: context.user.id },
+            { receivers: { $contained: [context.user.id] } },
             { outward: true }
           ]
         })
