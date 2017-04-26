@@ -49,7 +49,7 @@ export default class CreatePerson extends React.PureComponent {
           </div>
         </div>
         {
-          result !== null && (
+          result !== undefined && (
             result.created
             ? <div className="alert alert-success" role="alert">
               <strong>Well done!</strong> You successfully create a person.

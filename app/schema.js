@@ -86,7 +86,7 @@ const resolveFunctions = {
     },
     content(post, args, context) {
       const userId = context.user ? context.user.id : null
-      if (!post.outward && (userId !== post.personId || !post.receivers || !post.receivers.contains(userId))) {
+      if (!post.outward && (userId !== post.personId && !post.receivers.indexOf(userId) < 0)) {
         return null
       }
       return post.content

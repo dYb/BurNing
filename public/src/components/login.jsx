@@ -6,8 +6,9 @@ export default class Login extends React.PureComponent {
     e.preventDefault()
     const email = this.email.value
     const password = this.password.value
+    const remember = this.remember.checked
     if (!email || !password) return
-    this.props.doLogin({ email, password })
+    this.props.doLogin({ email, password }, remember)
     this.email.value = ''
     this.password.value = ''
   }
@@ -28,6 +29,12 @@ export default class Login extends React.PureComponent {
         <div className="form-group">
           <label className="col-form-label col-form-label-lg" htmlFor="password">Password:</label>
           <input type="password" className="form-control form-control-lg" ref={(input) => { this.password = input }} id="password" placeholder="Password" />
+        </div>
+        <div className="form-check">
+          <label className="form-check-label">
+            <input type="checkbox" defaultChecked ref={(input) => { this.remember = input }} className="form-check-input" />
+            &nbsp;Remember me in 7 days
+          </label>
         </div>
         <div className="form-group">
           <button type="submit" className="btn btn-primary btn-lg btn-block" onClick={this.login}>Login</button>

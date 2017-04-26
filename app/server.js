@@ -41,7 +41,7 @@ router.post('/login', async (ctx) => {
 
   const person = await DB.model('person').find({ where: { email, password } })
   if (person) {
-    ctx.body = await sign({ id: person.id, email, name: person.name, isAdmin: person.isAdmin }, 'NETEASE', { expiresIn: '2 days' })
+    ctx.body = await sign({ id: person.id, email, name: person.name, isAdmin: person.isAdmin }, 'NETEASE', { expiresIn: '7 days' })
   } else {
     ctx.body = ''
   }

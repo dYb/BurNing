@@ -23,7 +23,7 @@ export default class Post extends React.PureComponent {
       return <NotFound />
     }
     // 不是公开的 && 不是文章拥有者
-    if (!outward && (!authToken || authToken.id !== id)) {
+    if (!outward && !content && this.state.loaded) {
       return <Fobidden />
     }
     return (

@@ -74,20 +74,25 @@ export function searchPerson({ id, email }) {
 }
 
 export const SET_AUTH_TOKEN = 'SET_AUTH_TOKEN'
-export function doLogin(person) {
+export function doLogin(person, remember) {
   return (dispatch) => {
     axios.post('/login', { ...person })
     .then((result) => {
+      const authToken = Object.assign(decode(result.data), { token: result.data })
       dispatch({
         type: SET_AUTH_TOKEN,
-        authToken: Object.assign(decode(result.data), { token: result.data })
+        authToken
       })
+      if (remember && authToken) {
+        localStorage.setItem('token', JSON.stringify(authToken))
+      }
     })
     // .catch(err => alert(err))
   }
 }
 
 export function doLogout() {
+  localStorage.removeItem('token')
   return {
     type: SET_AUTH_TOKEN,
     authToken: null
