@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 const { times } = require('lodash')
 const Faker = require('faker')
 
-const { ARRAY, RANGE, INTEGER, STRING, BOOLEAN } = Sequelize
+const { ARRAY, INTEGER, STRING, BOOLEAN } = Sequelize
 
 // const Conn = new Sequelize('postgres://uqgfpeqv:fQ2UfMhPUWNefdqBo6ML2v7JTIKcy9hx@qdjjtnkv.db.elephantsql.com:5432/uqgfpeqv')
 const Conn = new Sequelize('postgres', 'postgres', 'ybduan', { dialect: 'postgres' })
@@ -10,11 +10,13 @@ const Conn = new Sequelize('postgres', 'postgres', 'ybduan', { dialect: 'postgre
 const Person = Conn.define('person', {
   name: {
     type: STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   email: {
     type: STRING,
     allowNull: false,
+    unique: true,
     validate: {
       isEmail: true
     }
@@ -51,34 +53,40 @@ const Post = Conn.define('post', {
 Person.hasMany(Post)
 Post.belongsTo(Person)
 
-Conn.sync({ force: true }).then(() => {
-  Person.create({
-    name: 'ybduan',
-    email: 'duanyubin2012@gmail.com',
-    password: '123456',
-    isAdmin: true
-  }).then((person) => {
-    return person.createPost({
-      title: `Sample title by ${person.name}`,
-      content: `This is a sample article`,
-      outward: false
-    })
-  })
-  times(10, (i) => {
-    Person.create({
-      name: 'name ' + i,
-      email: 'dyb' + i + '@gmail.com',
-      password: '123456',
-      isAdmin: false
-    }).then((person) => {
-      return person.createPost({
-        title: `Sample title by ${person.name}`,
-        content: `This is a sample article`,
-        outward: i % 2 === 0,
-        receivers: [i % 2]
-      })
-    })
-  })
-})
+// if (process.env.NODE_ENV !== 'test') {
+//   Conn.sync({ force: true }).then(() => {
+//     Person.create({
+//       name: 'ybduan',
+//       email: 'duanyubin2012@gmail.com',
+//       password: '123456',
+//       isAdmin: true
+//     }).then((person) => {
+//       return person.createPost({
+//         title: `Sample title by ${person.name}`,
+//         content: `This is a sample article`,
+//         outward: false
+//       })
+//     })
+//     times(10, (i) => {
+//       Person.create({
+//         name: 'name ' + i,
+//         email: 'dyb' + i + '@gmail.com',
+//         password: '123456',
+//         isAdmin: false
+//       }).then((person) => {
+//         return person.createPost({
+//           title: `Sample title by ${person.name}`,
+//           content: `This is a sample article`,
+//           outward: i % 2 === 0,
+//           receivers: [i % 2]
+//         })
+//       })
+//     })
+//   })
+// }
 
-module.exports = Conn
+module.exports = {
+  DB: Conn,
+  Person,
+  Post
+}

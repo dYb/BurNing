@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Schema should get empty posts when user is not logged in\` 1`] = `
+Object {
+  "people": Array [
+    Object {
+      "id": 1,
+      "posts": Array [],
+    },
+    Object {
+      "id": 2,
+      "posts": Array [
+        Object {
+          "content": "This is a sample article",
+          "id": 2,
+        },
+      ],
+    },
+    Object {
+      "id": 3,
+      "posts": Array [],
+    },
+  ],
+}
+`;
+
+exports[`Schema should get user\`s posts when user is logged in\` 1`] = `
+Object {
+  "people": Array [
+    Object {
+      "id": 1,
+      "posts": Array [
+        Object {
+          "content": "This is a sample article",
+          "id": 1,
+        },
+      ],
+    },
+  ],
+}
+`;

@@ -1,23 +1,18 @@
 const { makeExecutableSchema, addErrorLoggingToSchema } = require('graphql-tools')
 
-const Db = require('./db')
+const { DB } = require('./db')
 // const { resolveForAdmin } = require('./auth')
 
 const schema = `
   # This is a person
   type Person {
-    id: Int
+    id: Int!
     # 显示名称
-    name: String
+    name: String!
     # 邮箱
-    email: String
-    password: String
+    email: String!
     # 是否是管理员
     isAdmin: Boolean
-    # 属下
-    subordinates: [Person]
-    # 上司
-    boss: Person
     # 所发表的文章
     posts: [Post]
   }
@@ -70,21 +65,19 @@ const schema = `
 
 const resolveFunctions = {
   Person: {
-    posts(person, args, context) {
+    posts(person, args, context = {}) {
       // return person.getPosts()
-      return (context.user && person.id === context.user.id)
-        ? person.getPosts()
-        : null
-    },
-    password() {
-      return null
+      const where = (context.user && person.id === context.user.id) ? null : { outward: true }
+      return person.getPosts({ where }).then((data) => {
+        return data
+      })
     }
   },
   Post: {
     person(post) {
       return post.getPerson()
     },
-    content(post, args, context) {
+    content(post, args, context = {}) {
       const userId = context.user ? context.user.id : null
       if (!post.outward && (userId !== post.personId && !post.receivers.indexOf(userId) < 0)) {
         return null
@@ -94,10 +87,10 @@ const resolveFunctions = {
   },
   Query: {
     async people(_, args) {
-      const people = await Db.model('person').findAll({ where: args })
+      const people = await DB.model('person').findAll({ where: args })
       return people
     },
-    posts(_, args, context) {
+    posts(_, args, context = {}) {
       let newArgs = args
       if (context.user) {
         Object.assign(newArgs, {
@@ -110,22 +103,12 @@ const resolveFunctions = {
       } else {
         Object.assign(newArgs, { outward: true })
       }
-      return Db.model('post').findAll({ where: newArgs })
+      return DB.model('post').findAll({ where: newArgs })
     }
   },
   Mutation: {
-    addPerson(_, args, context) {
-      if (!context.user || !context.user.isAdmin) {
-        throw new Error('Unauthorized')
-      }
-      return Db.model('person')
-        .findOne({where: { name: args.name }})
-        .then((person) => {
-          if (person) {
-            throw new Error('User exists')
-          }
-          return Db.model('person').create(args)
-        })
+    addPerson(_, args) {
+      return DB.model('person').create(args)
         .then(() => ({ created: true }))
         .catch((err) => {
           return {
@@ -134,11 +117,11 @@ const resolveFunctions = {
           }
         })
     },
-    addPost(_, args, context) {
+    addPost(_, args, context = {}) {
       if (!context.user) {
-        throw new Error('Unauthorized')
+        return new Error('Unauthorized')
       }
-      return Db.model('post')
+      return DB.model('post')
         .create(Object.assign({}, args, {
           personId: context.user.id
         }))

@@ -3,6 +3,7 @@
     ["env", {
       "modules": false,
       "targets": {
+        "node": true,
         "browsers": ["last 2 versions"]
       }
     }],

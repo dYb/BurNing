@@ -6,7 +6,7 @@ const koaRouter = require('koa-router')
 const { sign } = require('jsonwebtoken')
 const { graphqlKoa, graphiqlKoa } = require('graphql-server-koa')
 
-const DB = require('./db')
+const { DB } = require('./db')
 const schema = require('./schema')
 
 const app = new Koa()
