@@ -24,11 +24,9 @@ const routes = [
   },
   {
     path: '/create-person',
-    name: 'Create Person',
     component: CreatePerson,
     props: ['personCreationResult', 'authToken'],
-    actions: ['addPerson'],
-    isAdmin: true
+    actions: ['addPerson']
   }, {
     path: '/search-person',
     name: 'Search Person',
@@ -59,7 +57,7 @@ const routes = [
       const { match: { params: { id } }, location } = routeProps
       const { post } = location.state || { post: { id } }
       return {
-        post: state.posts[id] ? state.posts[id] : post,
+        post: (state.posts && state.posts[id]) ? state.posts[id] : post,
         authToken: state.authToken,
         location
       }

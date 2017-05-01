@@ -45,7 +45,7 @@ export default class CreatePerson extends React.PureComponent {
               this.name.value = ''
               this.email.value = ''
               this.password.value = ''
-            }}>Add</button>
+            }}>Sign Up</button>
           </div>
         </div>
         {

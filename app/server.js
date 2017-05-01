@@ -3,10 +3,11 @@ const send = require('koa-send')
 const koaJWT = require('koa-jwt')
 const koaBody = require('koa-bodyparser')
 const koaRouter = require('koa-router')
+const { times } = require('lodash')
 const { sign } = require('jsonwebtoken')
 const { graphqlKoa, graphiqlKoa } = require('graphql-server-koa')
 
-const { DB } = require('./db')
+const { DB, Person } = require('./db')
 const schema = require('./schema')
 
 const app = new Koa()
@@ -49,3 +50,21 @@ router.post('/login', async (ctx) => {
 
 app.use(router.routes()).use(router.allowedMethods())
 app.listen(3000, '0.0.0.0', () => console.log('Now browser to localhost:3000/graphql'))
+
+DB.sync({ force: true }).then(() => {
+  times(10, (i) => {
+    Person.create({
+      name: 'ybduan' + i,
+      email: 'dyb' + i + '@gmail.com',
+      password: '123456',
+      isAdmin: i === 0
+    }).then((person) => {
+      return person.createPost({
+        title: `Sample title by ${person.name}`,
+        content: `This is a sample article`,
+        outward: i % 2 === 0,
+        receivers: [1]
+      })
+    })
+  })
+})

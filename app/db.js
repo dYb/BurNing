@@ -53,38 +53,6 @@ const Post = Conn.define('post', {
 Person.hasMany(Post)
 Post.belongsTo(Person)
 
-// if (process.env.NODE_ENV !== 'test') {
-//   Conn.sync({ force: true }).then(() => {
-//     Person.create({
-//       name: 'ybduan',
-//       email: 'duanyubin2012@gmail.com',
-//       password: '123456',
-//       isAdmin: true
-//     }).then((person) => {
-//       return person.createPost({
-//         title: `Sample title by ${person.name}`,
-//         content: `This is a sample article`,
-//         outward: false
-//       })
-//     })
-//     times(10, (i) => {
-//       Person.create({
-//         name: 'name ' + i,
-//         email: 'dyb' + i + '@gmail.com',
-//         password: '123456',
-//         isAdmin: false
-//       }).then((person) => {
-//         return person.createPost({
-//           title: `Sample title by ${person.name}`,
-//           content: `This is a sample article`,
-//           outward: i % 2 === 0,
-//           receivers: [i % 2]
-//         })
-//       })
-//     })
-//   })
-// }
-
 module.exports = {
   DB: Conn,
   Person,

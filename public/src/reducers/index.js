@@ -24,11 +24,10 @@ export default (state = INIT_STATE, action) => {
         profile: action.people[0]
       })
     case 'FETCH_POST':
-      return Object.assign({}, state, {
-        posts: {
-          [action.post.id]: action.post
-        }
+      const posts = Object.assign({}, state.posts, {
+        [action.post.id]: action.post
       })
+      return Object.assign({}, state, { posts })
     case 'FETCH_POST_LIST':
       return Object.assign({}, state, {
         postList: action.posts

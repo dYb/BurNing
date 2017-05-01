@@ -1,24 +1,22 @@
 import axios from 'axios'
 import decode from 'jwt-decode'
 
+import { graphQLHelper } from '../utils'
+
 export const ADD_PERSON = 'ADD_PERSON'
 export function addPerson(person) {
   return (dispatch) => {
     const mutation = ` 
-      mutation {
-        addPerson(name: "${person.name}", email: "${person.email}", password: "${person.password}"){
+      mutation AddPerson($name: String!, $email: String!, $password: String!){
+        addPerson(name: $name, email: $email, password: $password){
           message
           created
         }
       }
     `
-    axios.post('/graphql', { query: mutation })
-      .then(result => result.data)
-      .then((result) => {
-        if (result.errors) {
-          throw new Error(result.errors[0].message)
-        }
-        dispatch({ type: ADD_PERSON, result: result.data.addPerson })
+    graphQLHelper(mutation, person)
+      .then((data) => {
+        dispatch({ type: ADD_PERSON, result: data.addPerson })
       })
       // .catch(err => {
       //   alert(err.message)
@@ -40,25 +38,12 @@ function _searchPerson({ id, email, authToken }) {
       }
     }
   `
-  return axios({
-    method: 'post',
-    url: '/graphql',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken ? authToken.token : ''}`
-    },
-    data: {
-      query,
-      variables: { id, email }
-    }
-  })
-  .then(result => result.data)
-  .then((result) => {
-    if (result.errors) {
-      throw new Error(result.errors)
-    }
-    return result.data.people
-  })
+  return graphQLHelper(query, { id, email }, authToken)
+    .then((data) => {
+      console.log(data)
+      return data
+    })
+    .then(data => data.people)
 }
 
 export const SEARCH_PERSON = 'SEARCH_PERSON'
@@ -76,7 +61,7 @@ export function searchPerson({ id, email }) {
 export const SET_AUTH_TOKEN = 'SET_AUTH_TOKEN'
 export function doLogin(person, remember) {
   return (dispatch) => {
-    axios.post('/login', { ...person })
+    axios.post('/signIn', { ...person })
     .then((result) => {
       const authToken = Object.assign(decode(result.data), { token: result.data })
       dispatch({
@@ -127,32 +112,31 @@ function _fetchPost({ id, title, authToken }) {
       }
     }
   `
-  return axios({
-    method: 'post',
-    url: '/graphql',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken ? authToken.token : ''}`
-    },
-    data: {
-      query,
-      variables: { id, title }
-    }
-  })
-    .then(result => result.data)
-    .then((result) => {
-      if (result.errors) {
-        throw new Error(result.error)
-      }
-      return result.data.posts
-    })
+  return graphQLHelper(query, { id, title }, authToken)
+    .then(result => result.posts)
 }
 
 export const FETCH_POST = 'FETCH_POST'
 export function fetchPost({ id, title }) {
   return (dispatch, getState) => {
     const { authToken } = getState()
-    _fetchPost({ id, title, authToken })
+    const query = `
+      query PostsInfo($id: Int, $title: String) {
+        posts(id: $id, title: $title) {
+          id
+          title
+          outward
+          content
+          person {
+            id
+            name
+            email
+          }
+        }
+      }
+    `
+    return graphQLHelper(query, { id, title }, authToken)
+      .then(result => result.posts)
       .then(posts => posts && posts[0] && dispatch({
         type: FETCH_POST,
         post: posts[0]
@@ -172,25 +156,8 @@ export function addPost(post) {
       }
     `
     const { authToken } = getState()
-    return axios({
-      method: 'post',
-      url: '/graphql',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken ? authToken.token : ''}`
-      },
-      data: {
-        query: mutation,
-        variables: {...post}
-      }
-    })
-      .then(result => result.data)
-      .then((result) => {
-        if (result.errors) {
-          throw new Error(result.errors[0].message)
-        }
-        dispatch({ type: ADD_POST, result: result.data.addPost })
-      })
+    return graphQLHelper(mutation, post, authToken)
+      .then(data => dispatch({ type: ADD_POST, result: data.addPost }))
   }
 }
 
@@ -198,7 +165,16 @@ export const FETCH_POST_LIST = 'FETCH_POST_LIST'
 export function fetchPostList() {
   return (dispatch, getState) => {
     const { authToken } = getState()
-    _fetchPost({ authToken })
+    const query = `
+      query {
+        posts {
+          id
+          title
+        }
+      }
+    `
+    return graphQLHelper(query, null, authToken)
+      .then(result => result.posts)
       .then(posts => posts && dispatch({
         type: FETCH_POST_LIST,
         posts

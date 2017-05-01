@@ -8,9 +8,10 @@ export default class Post extends React.PureComponent {
     const { post, fetchPost } = this.props
     const { id, content } = post || {}
     if (!content) {
-      fetchPost({ id: +id })
-      this.setState({
-        loaded: true
+      fetchPost({ id: +id }).then(() => {
+        this.setState({
+          loaded: true
+        })
       })
     }
   }
