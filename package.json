@@ -8,7 +8,8 @@
     "lint": "eslint . --ext .jsx,.js",
     "lint:fix": "npm run lint -- --fix",
     "dev": "nodemon app/server.js",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "engines": {
     "node": ">=7.9.0"

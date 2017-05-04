@@ -40,7 +40,6 @@ function _searchPerson({ id, email, authToken }) {
   `
   return graphQLHelper(query, { id, email }, authToken)
     .then((data) => {
-      console.log(data)
       return data
     })
     .then(data => data.people)
@@ -61,8 +60,15 @@ export function searchPerson({ id, email }) {
 export const SET_AUTH_TOKEN = 'SET_AUTH_TOKEN'
 export function doLogin(person, remember) {
   return (dispatch) => {
-    axios.post('/signIn', { ...person })
+    return axios.post('/login', { ...person })
     .then((result) => {
+      if (!result.data) {
+        dispatch({
+          type: SET_AUTH_TOKEN,
+          authToken: ''
+        })
+        return Promise.resolve()
+      }
       const authToken = Object.assign(decode(result.data), { token: result.data })
       dispatch({
         type: SET_AUTH_TOKEN,
@@ -71,6 +77,7 @@ export function doLogin(person, remember) {
       if (remember && authToken) {
         localStorage.setItem('token', JSON.stringify(authToken))
       }
+      return result
     })
     // .catch(err => alert(err))
   }
@@ -94,26 +101,6 @@ export function fetchProfile(id) {
       //   alert(err.message)
       // })
   }
-}
-
-function _fetchPost({ id, title, authToken }) {
-  const query = `
-    query PostsInfo($id: Int, $title: String) {
-      posts(id: $id, title: $title) {
-        id
-        title
-        outward
-        content
-        person {
-          id
-          name
-          email
-        }
-      }
-    }
-  `
-  return graphQLHelper(query, { id, title }, authToken)
-    .then(result => result.posts)
 }
 
 export const FETCH_POST = 'FETCH_POST'

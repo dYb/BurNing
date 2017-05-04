@@ -161,7 +161,7 @@ describe('Schema', () => {
     expect(result.data).toBeTruthy()
     expect(result.data.addPerson.created).toBeFalsy()
   })
-  it('shouldadd a person', async () => {
+  it('should add a person', async () => {
     const query = `
       mutation M {
         addPerson(name: "name 11", email: "dyb11@gmail.com", password: "123456") {
