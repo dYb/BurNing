@@ -2,8 +2,6 @@ const { resolve } = require('path')
 const webpack = require('webpack')
 
 module.exports = {
-  context: resolve(__dirname, 'public'),
-
   entry: [
     'babel-polyfill',
     'react-hot-loader/patch',
@@ -50,7 +48,10 @@ module.exports = {
       {
         test: /\.jsx?$/,
         use: ['babel-loader'],
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        query: {
+          cacheDirectory: true
+        }
       },
       {
         test: /\.css$/,

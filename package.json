@@ -7,7 +7,7 @@
     "webpack": "webpack-dev-server",
     "lint": "eslint . --ext .jsx,.js",
     "lint:fix": "npm run lint -- --fix",
-    "dev": "nodemon app/server.js",
+    "dev": "nodemon server/app.js",
     "test": "jest",
     "test:watch": "jest --watch"
   },
