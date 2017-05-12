@@ -20,6 +20,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
+    exact: true,
     component: Home
   },
   {
@@ -46,10 +47,18 @@ const routes = [
     actions: ['doLogin'],
     hideWhenLogin: true
   }, {
-    path: '/profile',
+    path: '/profile/:id',
     component: Profile,
-    props: ['authToken', 'profile'],
-    actions: ['fetchProfile', 'doLogout']
+    mapStateToProps: routeProps => state => {
+      const { match: { params: { id } } } = routeProps
+      return {
+        id: +id,
+        authToken: state.authToken,
+        profile: (state.profile && state.profile[id]) ? state.profile[id] : null
+      }
+    },
+    actions: ['fetchProfile', 'doLogout'],
+    onNavigate: 'fetchProfile'
   }, {
     path: '/post/:id',
     component: Post,
@@ -62,7 +71,8 @@ const routes = [
         location
       }
     },
-    actions: ['fetchPost']
+    actions: ['fetchPost'],
+    onNavigate: 'fetchPost'
   }, {
     path: '/create-post',
     component: CreatePost,
@@ -73,7 +83,8 @@ const routes = [
     component: PostList,
     name: 'Post List',
     props: ['postList'],
-    actions: ['fetchPostList']
+    actions: ['fetchPostList'],
+    onNavigate: 'fetchPostList'
   }
 ]
 export default routes

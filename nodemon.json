@@ -2,9 +2,9 @@
   "restartable": "rs",
   "verbose": true,
   "execMap": {
-    "js": "node --inspect"
+    "js": "babel-node --inspect"
   },
-  "watch": ["app", "nodemon.json"],
+  "watch": ["src", "server", "nodemon.json"],
   "env": {
     "NODE_ENV": "development"
   },

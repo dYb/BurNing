@@ -1,7 +1,7 @@
 const { graphql } = require('graphql')
 const { times } = require('lodash')
-const schema = require('../app/schema')
-const { DB, Person } = require('../app/db')
+const schema = require('../server/schema')
+const { DB, Person } = require('../server/db')
 
 describe('Schema', () => {
   beforeAll(() => {
@@ -22,6 +22,32 @@ describe('Schema', () => {
         })
       }))
     })
+  })
+  it('should get specific user when id exists', async () => {
+    const query = `
+      query Q {
+        people(id: 1) {
+          id
+        }
+      }
+    `
+    const result = await graphql(schema, query)
+    // expect(result.data).toBeTruthy()
+    // expect(result.data.people.length).toBe(1)
+    expect(result.data).toMatchSnapshot()
+  })
+  it('should get specific user when email exists', async () => {
+    const query = `
+      query Q {
+        people(email: "dyb0@gmail.com") {
+          id
+        }
+      }
+    `
+    const result = await graphql(schema, query)
+    // expect(result.data).toBeTruthy()
+    // expect(result.data.people.length).toBe(1)
+    expect(result.data).toMatchSnapshot()
   })
   it('should get empty posts when user is not logged in`', async () => {
     const query = `

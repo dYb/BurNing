@@ -33,7 +33,7 @@ const Header = ({ authToken }) => (
       {
         !authToken
         ? <Link to="/login" className="btn btn-outline-secondary my-2 my-sm-2">LOGIN</Link>
-        : <Link to="/profile" className="btn btn-outline-secondary ml-2 my-sm-2">PROFILE</Link>
+        : <Link to={'/profile/' + authToken.id} className="btn btn-outline-secondary ml-2 my-sm-2">PROFILE</Link>
       }
     </div>
   </nav>

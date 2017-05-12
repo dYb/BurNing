@@ -4,12 +4,13 @@
   "main": "server.js",
   "scripts": {
     "start": "concurrently \"npm run dev\" \"npm run webpack\"",
-    "webpack": "webpack-dev-server",
+    "webpack": "cross-env NODE_ENV=development BABEL_ENV=browser_dev webpack-dev-server --config kit/webpack/browser.js",
     "lint": "eslint . --ext .jsx,.js",
     "lint:fix": "npm run lint -- --fix",
-    "dev": "nodemon server/app.js",
+    "dev": "cross-env NODE_ENV=development BABEL_ENV=server nodemon server/app.js",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:snap": "jest --updateSnapshot"
   },
   "engines": {
     "node": ">=7.9.0"
@@ -21,6 +22,7 @@
   "author": "dYb <duanyubin2012@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-eslint": "6",
     "babel-jest": "^19.0.0",
@@ -30,6 +32,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "concurrently": "^3.4.0",
+    "cross-env": "^4.0.0",
     "css-loader": "^0.28.0",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.0",
@@ -47,10 +50,13 @@
     "regenerator-runtime": "^0.10.5",
     "style-loader": "^0.16.1",
     "webpack": "^2.3.3",
-    "webpack-dev-server": "^2.4.2"
+    "webpack-config": "^7.0.0",
+    "webpack-dev-server": "^2.4.2",
+    "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
     "axios": "^0.16.1",
+    "bluebird": "^3.5.0",
     "graphql": "^0.9.2",
     "graphql-server-koa": "^0.7.0",
     "graphql-tools": "^0.11.0",
@@ -93,5 +99,37 @@
       "lcov",
       "html"
     ]
+  },
+  "babel": {
+    "env": {
+      "browser_dev": {
+        "presets": [
+          ["env", {
+            "module": false,
+            "targets": {
+              "browsers": ["last 2 Chrome versions"]
+            }
+          }],
+          "react"
+        ],
+        "plugins": [ 
+          "react-hot-loader/babel",
+          "babel-plugin-transform-object-rest-spread",
+          "transform-class-properties",
+          "syntax-dynamic-import",
+          "transform-class-constructor-call",
+          "transform-export-extensions",
+          "transform-function-bind"
+        ]
+      },
+      "server": {
+        "presets": ["react"],
+        "plugins": [ 
+          "babel-plugin-transform-es2015-modules-commonjs",
+          "babel-plugin-transform-object-rest-spread",
+          "transform-class-properties"
+        ]
+      }
+    }
   }
 }

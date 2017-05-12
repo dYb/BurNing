@@ -3,21 +3,13 @@ import { Redirect, Link } from 'react-router-dom'
 
 export default class Profile extends React.PureComponent {
   componentDidMount() {
-    const { authToken, fetchProfile, profile } = this.props
-    if (authToken && !profile) {
-      fetchProfile(authToken.id)
+    const { id, fetchProfile, profile } = this.props
+    if (!profile) {
+      fetchProfile({ id })
     }
   }
   render() {
-    const { authToken, profile, doLogout } = this.props
-    if (!authToken) {
-      return <Redirect to={{
-        pathname: '/login',
-        state: {
-          from: { pathname: '/profile' }
-        }
-      }} />
-    }
+    const { id, authToken, profile, doLogout } = this.props
     if (!profile) {
       return null
     }
@@ -48,7 +40,9 @@ export default class Profile extends React.PureComponent {
               }
             </ul>
           </div>
-          <button onClick={doLogout} type="button" className="btn btn-danger btn-lg btn-block">LOGOUT</button>
+          {
+            authToken && authToken.id === id && <button onClick={doLogout} type="button" className="btn btn-danger btn-lg btn-block">LOGOUT</button>
+          }
         </form>
       </div>
     )

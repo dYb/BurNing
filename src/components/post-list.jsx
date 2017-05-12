@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 
 export default class PostList extends React.Component {
   componentDidMount() {
-    const { fetchPostList } = this.props
-    fetchPostList()
+    const { fetchPostList, postList } = this.props
+    if (!postList || !postList.length) {
+      fetchPostList()
+    }
   }
   render() {
     const { postList } = this.props

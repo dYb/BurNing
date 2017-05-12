@@ -86,8 +86,14 @@ const resolveFunctions = {
     }
   },
   Query: {
-    async people(_, args) {
-      const people = await DB.model('person').findAll({ where: args })
+    async people({ id, email }) {
+      let args = {}
+      if (id || id === 0) args.id = id
+      if (email) args.email = email
+      const people = await DB.model('person').findAll({
+        attributes: { exclude: ['password'] },
+        where: args
+      })
       return people
     },
     posts(_, args, context = {}) {

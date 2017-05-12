@@ -24,6 +24,26 @@ Object {
 }
 `;
 
+exports[`Schema should get specific user when email exists 1`] = `
+Object {
+  "people": Array [
+    Object {
+      "id": 1,
+    },
+  ],
+}
+`;
+
+exports[`Schema should get specific user when id exists 1`] = `
+Object {
+  "people": Array [
+    Object {
+      "id": 1,
+    },
+  ],
+}
+`;
+
 exports[`Schema should get user\`s posts when user is logged in\` 1`] = `
 Object {
   "people": Array [

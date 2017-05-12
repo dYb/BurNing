@@ -2,17 +2,18 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 
 export default class Login extends React.PureComponent {
-  state = { clicked: false }
   login = async (e) => {
     e.preventDefault()
     const email = this.email.value
     const password = this.password.value
     const remember = this.remember.checked
     if (!email || !password) return
-    await this.props.doLogin({ email, password }, remember)
-    this.setState({ clicked: true })
-    this.email.value = ''
-    this.password.value = ''
+    const result = await this.props.doLogin({ email, password }, remember)
+    console.log(result)
+    if (!result) {
+      this.email.value = ''
+      this.password.value = ''
+    }
   }
   render() {
     const { authToken, location } = this.props
@@ -42,7 +43,7 @@ export default class Login extends React.PureComponent {
           <button type="submit" className="btn btn-primary btn-lg btn-block" onClick={this.login}>Sign In</button>
         </div>
         {
-          this.state.clicked && !authToken && <div className="alert alert-danger" role="alert">
+          authToken === false && <div className="alert alert-danger" role="alert">
             <strong>Failed!</strong>
           </div>
         }
