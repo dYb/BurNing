@@ -1,6 +1,6 @@
 import axios from 'axios'
 import decode from 'jwt-decode'
-const { graphQLHelper } = process.env.BROWSER ? require('../utils/client-graphql-helper') : require('../utils/server-graphql-helper')
+const { graphQLHelper } = process.env.BROWSER ? require('./utils/client-graphql-helper') : require('./utils/server-graphql-helper')
 // const { graphQLHelper } = require('../utils/client-graphql-helper')
 
 // let graphQLHelper = () => {}
@@ -81,7 +81,7 @@ export function doLogin(person, remember) {
       if (remember && authToken) {
         localStorage.setItem('token', JSON.stringify(authToken))
       } else {
-        document.cookie = 'jsonwebtoken=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+        document.cookie = 'jsonwebtoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
       }
       return result
     })
@@ -91,7 +91,7 @@ export function doLogin(person, remember) {
 
 export function doLogout() {
   localStorage.removeItem('token')
-  document.cookie = 'jsonwebtoken=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+  document.cookie = 'jsonwebtoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
   return {
     type: SET_AUTH_TOKEN,
     authToken: null
@@ -103,7 +103,7 @@ export function fetchProfile({ id }) {
   return (dispatch, getState) => {
     return _searchPerson({ id: +id })
       .then((people) => {
-        const person = people.length ? people[0] : { id }
+        const person = (people && people.length) ? people[0] : { id }
         dispatch({
           type: FETCH_PROFILE,
           person
