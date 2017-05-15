@@ -25,29 +25,29 @@ describe('Schema', () => {
   })
   it('should get specific user when id exists', async () => {
     const query = `
-      query Q {
-        people(id: 1) {
+      query Q($id: Int, $email: String) {
+        people(id: $id, email: $email) {
           id
         }
       }
     `
-    const result = await graphql(schema, query)
-    // expect(result.data).toBeTruthy()
-    // expect(result.data.people.length).toBe(1)
-    expect(result.data).toMatchSnapshot()
+    const result = await graphql(schema, query, {}, {}, { id: 1 })
+    expect(result.data).toBeTruthy()
+    expect(result.data.people.length).toBe(1)
+    // expect(result.data).toMatchSnapshot()
   })
   it('should get specific user when email exists', async () => {
     const query = `
-      query Q {
-        people(email: "dyb0@gmail.com") {
+      query Q($id: Int, $email: String) {
+        people(id: $id, email: $email) {
           id
         }
       }
     `
-    const result = await graphql(schema, query)
-    // expect(result.data).toBeTruthy()
-    // expect(result.data.people.length).toBe(1)
-    expect(result.data).toMatchSnapshot()
+    const result = await graphql(schema, query, {}, {}, { email: 'dyb0@gmail.com' })
+    expect(result.data).toBeTruthy()
+    expect(result.data.people.length).toBe(1)
+    // expect(result.data).toMatchSnapshot()
   })
   it('should get empty posts when user is not logged in`', async () => {
     const query = `
@@ -62,28 +62,10 @@ describe('Schema', () => {
       }
     `
     const result = await graphql(schema, query)
-    // expect(result.data).toBeTruthy()
-    // expect(result.data.people.length).toBe(3)
-    // expect(result.data.people.filter(person => person.posts.length).length).toBe(1)
-    expect(result.data).toMatchSnapshot()
-  })
-  it('should get user`s posts when user is logged in`', async () => {
-    const query = `
-      query Q {
-        people(id: 1) {
-          id
-          posts {
-            id
-            content
-          }
-        }
-      }
-    `
-    const result = await graphql(schema, query, {}, { user: { id: 1 } })
-    // expect(result.data).toBeTruthy()
-    // expect(result.data.people.length).toBe(1)
-    // expect(result.data.people[0].posts.length).toBe(1)
-    expect(result.data).toMatchSnapshot()
+    expect(result.data).toBeTruthy()
+    expect(result.data.people.length).toBe(3)
+    expect(result.data.people.filter(person => person.posts.length).length).toBe(1)
+    // expect(result.data).toMatchSnapshot()
   })
   it('should get content of post when outward is true', async () => {
     const query = `
@@ -100,25 +82,25 @@ describe('Schema', () => {
   })
   it('should not get content of post when user is not logged in', async () => {
     const query = `
-      query Q {
-        posts(id: 1) {
+      query Q($id: Int, $title: String) {
+        posts(id: $id, title: $title) {
           content
         }
       }
     `
-    const result = await graphql(schema, query)
+    const result = await graphql(schema, query, {}, {}, { id: 1 })
     expect(result.data).toBeTruthy()
-    expect(result.data.posts.length).toBe(0)
+    expect(result.data.posts[0].content).toBeFalsy()
   })
   it('should get content of post when user is logged in', async () => {
     const query = `
-      query Q {
-        posts(id: 1) {
+      query Q($id: Int, $title: String) {
+        posts(id: $id, title: $title) {
           content
         }
       }
     `
-    const result = await graphql(schema, query, {}, { user: { id: 1 } })
+    const result = await graphql(schema, query, {}, { user: { id: 1 } }, { id: 1 })
     expect(result.data).toBeTruthy()
     expect(result.data.posts.length).toBe(1)
     expect(result.data.posts[0].content).toBeTruthy()
@@ -135,7 +117,32 @@ describe('Schema', () => {
     expect(result.data).toBeTruthy()
     expect(result.data.posts.length).toBe(3)
   })
-
+  it('should get specific post when id exists', async () => {
+    const query = `
+      query Q($id: Int, $title: String) {
+        posts(id: $id, title: $title) {
+          id
+        }
+      }
+    `
+    const result = await graphql(schema, query, {}, {}, { id: 1 })
+    expect(result.data).toBeTruthy()
+    expect(result.data.posts.length).toBe(1)
+    // expect(result.data).toMatchSnapshot()
+  })
+  it('should get specific post when title exists', async () => {
+    const query = `
+      query Q($id: Int, $title: String) {
+        posts(id: $id, title: $title) {
+          id
+        }
+      }
+    `
+    const result = await graphql(schema, query, {}, {}, { title: 'Sample title by name 0' })
+    expect(result.data).toBeTruthy()
+    expect(result.data.posts.length).toBe(1)
+    // expect(result.data).toMatchSnapshot()
+  })
   it('should not be able to add a post when user is not logged in', async () => {
     const query = `
       mutation M {

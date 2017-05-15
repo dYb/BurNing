@@ -9,5 +9,5 @@
     "NODE_ENV": "development"
   },
   "delay": "300",
-  "ext": "js json"
+  "ext": "js json jsx"
 }

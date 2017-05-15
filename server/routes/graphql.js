@@ -8,7 +8,7 @@ router.post('/graphql', graphqlKoa((ctx) => {
   return {
     schema,
     context: {
-      user: ctx.state.user
+      authToken: ctx.state.user
     },
     debug: process.env.NODE_ENV === 'development'
   }

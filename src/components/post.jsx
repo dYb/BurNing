@@ -17,15 +17,16 @@ export default class Post extends React.PureComponent {
   }
   render() {
     const { post, authToken } = this.props
-    const { title, content, outward, person } = (post || {})
+    const { title, outward, person } = (post || {})
     const { id, name, email } = (person || {})
     // 文章拥有者 && 加载过数据 && 仍然没有内容
     if (authToken && authToken.id === id && this.state.loaded && !content) {
       return <NotFound />
     }
     // 不是公开的 && 不是文章拥有者
+    let content = post.content
     if (!outward && !content && this.state.loaded) {
-      return <Fobidden />
+      content = 'content is not visiable'
     }
     return (
       <div>

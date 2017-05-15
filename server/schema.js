@@ -67,7 +67,7 @@ const resolveFunctions = {
   Person: {
     posts(person, args, context = {}) {
       // return person.getPosts()
-      const where = (context.user && person.id === context.user.id) ? null : { outward: true }
+      const where = (context.authToken && person.id === context.authToken.id) ? null : { outward: true }
       return person.getPosts({ where }).then((data) => {
         return data
       })
@@ -78,15 +78,15 @@ const resolveFunctions = {
       return post.getPerson()
     },
     content(post, args, context = {}) {
-      const userId = context.user ? context.user.id : null
-      if (!post.outward && (userId !== post.personId && !post.receivers.indexOf(userId) < 0)) {
+      const userId = context.authToken ? context.authToken.id : null
+      if (!post.outward && (userId !== post.personId && post.receivers.indexOf(userId) < 0)) {
         return null
       }
       return post.content
     }
   },
   Query: {
-    async people({ id, email }) {
+    async people(_, { id, email }) {
       let args = {}
       if (id || id === 0) args.id = id
       if (email) args.email = email
@@ -96,20 +96,24 @@ const resolveFunctions = {
       })
       return people
     },
-    posts(_, args, context = {}) {
-      let newArgs = args
-      if (context.user) {
-        Object.assign(newArgs, {
+    posts(_, { id, title }, context = {}) {
+      let args = {}
+      if (id || id === 0) {
+        args = { id }
+      } else if (title) {
+        args = { title }
+      } else if (context.authToken) {
+        Object.assign(args, {
           $or: [
-            { personId: context.user.id },
-            { receivers: { $contained: [context.user.id] } },
+            { personId: context.authToken.id },
+            { receivers: { $contained: [context.authToken.id] } },
             { outward: true }
           ]
         })
       } else {
-        Object.assign(newArgs, { outward: true })
+        Object.assign(args, { outward: true })
       }
-      return DB.model('post').findAll({ where: newArgs })
+      return DB.model('post').findAll({ where: args })
     }
   },
   Mutation: {
@@ -124,12 +128,12 @@ const resolveFunctions = {
         })
     },
     addPost(_, args, context = {}) {
-      if (!context.user) {
+      if (!context.authToken) {
         return new Error('Unauthorized')
       }
       return DB.model('post')
         .create(Object.assign({}, args, {
-          personId: context.user.id
+          personId: context.authToken.id
         }))
     }
   }

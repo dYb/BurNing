@@ -1,12 +1,11 @@
 import axios from 'axios'
 
-export const graphQLHelper = (query, variables, authToken) => {
+export function graphQLHelper(query, variables) {
   return axios({
     method: 'post',
     url: '/graphql',
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken ? authToken.token : ''}`
+      'Content-Type': 'application/json'
     },
     data: {
       query,

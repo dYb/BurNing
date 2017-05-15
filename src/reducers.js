@@ -7,7 +7,7 @@ const INIT_STATE = {
 }
 export default (state = INIT_STATE, action) => {
   switch (action.type) {
-    case 'ADD_PERSON':
+    case 'CREATE_PERSON':
       return Object.assign({}, state, {
         personCreationResult: action.result
       })
