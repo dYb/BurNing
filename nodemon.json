@@ -4,7 +4,7 @@
   "execMap": {
     "js": "babel-node --inspect"
   },
-  "watch": ["src", "server", "nodemon.json"],
+  "watch": ["server", "nodemon.json"],
   "env": {
     "NODE_ENV": "development"
   },

@@ -31,16 +31,18 @@ const App = () => {
                 const mapStateToProps = (route.mapStateToProps && route.mapStateToProps(routeProps)) || ((state) => {
                   if (!route.props) return {}
                   const props = route.props.reduce((acc, curr) => {
-                    return Object.assign({}, acc, {
+                    return {
+                      ...acc,
                       [curr]: state[curr]
-                    })
+                    }
                   }, {})
                   return props
                 })
                 const actionCreators = !route.actions ? null : route.actions.reduce((acc, curr) => {
-                  return Object.assign({}, acc, {
+                  return {
+                    ...acc,
                     [curr]: actions[curr]
-                  })
+                  }
                 }, {})
                 const Connector = connect(mapStateToProps, actionCreators)(route.component)
                 return <Connector />

@@ -19,6 +19,10 @@ router.get('/', async (ctx) => {
   const filePath = path.resolve(__dirname, '../..', 'public', 'index.html')
   try {
     const html = await readFile(filePath, 'utf8')
+    if (process.env.NODE_ENV === 'development') {
+      ctx.body = html.replace('{{SSR}}', '').replace('{{STATE}}', '{}')
+      return
+    }
     const context = {}
     const store = configureStore({
       authToken: ctx.state.user

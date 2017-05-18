@@ -4,13 +4,15 @@
   "main": "server.js",
   "scripts": {
     "start": "concurrently \"npm run dev\" \"npm run webpack\"",
-    "webpack": "cross-env NODE_ENV=development BABEL_ENV=browser_dev webpack-dev-server --config kit/webpack/browser.js",
+    "webpack": "cross-env NODE_ENV=development BABEL_ENV=browser webpack-dev-server --config kit/webpack/browser-dev.js",
+    "build-browser": "cross-env NODE_ENV=production BABEL_ENV=browser webpack --config kit/webpack/browser-prod.js",
+    "build-server": "cross-env NODE_ENV=production BABEL_ENV=server webpack --config kit/webpack/server.js",
+    "server": "node dist/server",
     "lint": "eslint . --ext .jsx,.js",
     "lint:fix": "npm run lint -- --fix",
     "dev": "cross-env NODE_ENV=development BABEL_ENV=server nodemon server/app.js",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "test:snap": "jest --updateSnapshot"
+    "test:watch": "jest --watch"
   },
   "engines": {
     "node": ">=7.9.0"
@@ -102,7 +104,7 @@
   },
   "babel": {
     "env": {
-      "browser_dev": {
+      "browser": {
         "presets": [
           ["env", {
             "module": false,

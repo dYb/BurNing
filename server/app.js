@@ -1,7 +1,7 @@
-const Koa = require('koa')
-const koaJWT = require('koa-jwt')
-const koaBody = require('koa-bodyparser')
-const { times } = require('lodash')
+import Koa from 'koa'
+import koaJWT from 'koa-jwt'
+import koaBody from 'koa-bodyparser'
+import { times } from 'lodash'
 
 const router = require('./routes')
 const { DB, Person } = require('./db')
