@@ -33,7 +33,7 @@ module.exports = {
   },
   target: 'node',
   resolve: {
-    modules: ['node_modules', '.'],
+    modules: ['node_modules', 'src'],
     extensions: ['.js', '.jsx', '.css', '.json']
   },
   plugins: [

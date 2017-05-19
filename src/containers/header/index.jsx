@@ -2,7 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 // import { withRouter } from 'react-router'
 import { Link, NavLink, withRouter } from 'react-router-dom'
-import routes from '../routes.js'
+import { compose } from 'recompose'
+import routes from '../../routes'
 
 const Header = ({ authToken }) => (
   <nav className="navbar navbar-toggleable-md navbar-inverse bg-primary">
@@ -12,14 +13,14 @@ const Header = ({ authToken }) => (
           if (!route.name) {
             return null
           }
-          // 仅管理员及未登录时显示
+          {/*// 仅管理员及未登录时显示
           if (authToken && !authToken.isAdmin) {
             return null
           }
           // 登录时隐藏
           if (route.hideWhenLogin && authToken) {
             return null
-          }
+          }*/}
           return (
             <li className="nav-item" key={route.name}>
               <NavLink exact activeClassName="active" className="nav-link" to={route.path}>{route.name}</NavLink>
@@ -38,5 +39,4 @@ const Header = ({ authToken }) => (
     </div>
   </nav>
 )
-
-export default withRouter(connect(state => ({ authToken: state.authToken }))(Header))
+export default compose(withRouter, connect(state => ({ authToken: state.auth.user })))(Header)

@@ -1,7 +1,6 @@
 import axios from 'axios'
 import decode from 'jwt-decode'
 const { graphQLHelper } = process.env.BROWSER ? require('./utils/client-graphql-helper') : require('./utils/server-graphql-helper')
-console.log(process.env.BROWSER)
 
 export const CREATE_PERSON = 'CREATE_PERSON'
 export function addPerson(person) {

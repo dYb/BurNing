@@ -114,7 +114,7 @@
         ],
         "plugins": [ 
           "react-hot-loader/babel",
-          "babel-plugin-transform-object-rest-spread",
+          "transform-object-rest-spread",
           "transform-class-properties",
           "syntax-dynamic-import",
           "transform-class-constructor-call",

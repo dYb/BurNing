@@ -1,8 +1,8 @@
-const Router = require('koa-router')
+import Router from 'koa-router'
 
-const graphql = require('./graphql')
-const login = require('./login')
-const ssr = require('./ssr')
+import login from './login'
+import graphql from './graphql'
+import universal from './universal'
 
 const router = new Router()
 
@@ -11,8 +11,8 @@ router.get('/favicon.ico', (ctx) => {
 })
 
 router
-  .use(graphql.routes())
   .use(login.routes())
-  .use(ssr.routes())
+  .use(graphql.routes())
+  .use(universal.routes())
 
 module.exports = router
