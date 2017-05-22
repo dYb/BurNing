@@ -32,15 +32,18 @@ module.exports = {
     __dirname: true
   },
   resolve: {
-    modules: ['node_modules', '.'],
+    modules: ['.', 'src', 'node_modules'],
     extensions: ['.js', '.jsx', '.css', '.json']
   },
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        BROWSER: JSON.stringify(false)
+        BROWSER: JSON.stringify(false),
+        NODE_ENV: JSON.stringify('production')
       }
     })
   ],
-  externals: nodeModules()
+  externals: nodeModules({
+    whitelist: /redux\//
+  })
 }

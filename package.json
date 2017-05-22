@@ -7,7 +7,7 @@
     "webpack": "cross-env NODE_ENV=development BABEL_ENV=browser webpack-dev-server --config kit/webpack/browser-dev.js",
     "build-browser": "cross-env NODE_ENV=production BABEL_ENV=browser webpack --config kit/webpack/browser-prod.js",
     "build-server": "cross-env NODE_ENV=production BABEL_ENV=server webpack --config kit/webpack/server.js",
-    "server": "node dist/server",
+    "server": "cross-env NODE_ENV=production node --inspect --debug-brk dist/server",
     "lint": "eslint . --ext .jsx,.js",
     "lint:fix": "npm run lint -- --fix",
     "dev": "cross-env NODE_ENV=development BABEL_ENV=server nodemon server/app.js",
@@ -116,7 +116,7 @@
         ],
         "plugins": [ 
           "react-hot-loader/babel",
-          "babel-plugin-transform-object-rest-spread",
+          "transform-object-rest-spread",
           "transform-class-properties",
           "syntax-dynamic-import",
           "transform-class-constructor-call",

@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+
 // import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys'
 import {
   Route,
@@ -12,13 +13,12 @@ import {
 //   transitionLeaveTimeout={600} >
 // </CSSTransitionGroup>
 
-import routes from '../routes'
-import Header from './header.jsx'
-import NotFound from '../components/404.jsx'
-import * as actions from '../actions'
+import NotFound from 'components/404.jsx'
+import routes from '../../routes'
+import Header from '../header'
+// import * as actions from '../actions'
 
 // import './app.css'
-
 const App = () => {
   return (
     <div>
@@ -28,23 +28,9 @@ const App = () => {
           {
             routes.map((route, i) => (
               <Route exact key={i} path={route.path} render={(routeProps) => {
-                const mapStateToProps = (route.mapStateToProps && route.mapStateToProps(routeProps)) || ((state) => {
-                  if (!route.props) return {}
-                  const props = route.props.reduce((acc, curr) => {
-                    return {
-                      ...acc,
-                      [curr]: state[curr]
-                    }
-                  }, {})
-                  return props
-                })
-                const actionCreators = !route.actions ? null : route.actions.reduce((acc, curr) => {
-                  return {
-                    ...acc,
-                    [curr]: actions[curr]
-                  }
-                }, {})
-                const Connector = connect(mapStateToProps, actionCreators)(route.component)
+                const mapStateToProps = route.mapStateToProps ? route.mapStateToProps(routeProps) : null
+                const mapDispatchToProps = route.mapDispatchToProps ? route.mapDispatchToProps(routeProps) : null
+                const Connector = connect(mapStateToProps, mapDispatchToProps)(route.component)
                 return <Connector />
               }} />
             ))

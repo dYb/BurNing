@@ -59,7 +59,7 @@ module.exports = {
   },
   target: 'web',
   resolve: {
-    modules: ['node_modules', '.'],
+    modules: ['node_modules', 'src'],
     extensions: ['.js', '.jsx', '.css', '.json']
   },
   plugins: [

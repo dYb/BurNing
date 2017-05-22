@@ -1,5 +1,5 @@
 import React from 'react'
-import { Redirect, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 export default class Profile extends React.PureComponent {
   componentDidMount() {
@@ -9,9 +9,9 @@ export default class Profile extends React.PureComponent {
     }
   }
   render() {
-    const { id, authToken, profile, doLogout } = this.props
-    if (!profile) {
-      return null
+    const { id, authToken, profile, logout } = this.props
+    if (!profile || !profile.name) {
+      return <div>No person</div>
     }
     return (
       <div>
@@ -41,7 +41,7 @@ export default class Profile extends React.PureComponent {
             </ul>
           </div>
           {
-            authToken && authToken.id === id && <button onClick={doLogout} type="button" className="btn btn-danger btn-lg btn-block">LOGOUT</button>
+            authToken && authToken.id === id && <button onClick={logout} type="button" className="btn btn-danger btn-lg btn-block">LOGOUT</button>
           }
         </form>
       </div>

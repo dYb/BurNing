@@ -1,11 +1,11 @@
 import React from 'react'
-import Fobidden from './403.jsx'
 import { Redirect } from 'react-router-dom'
+
+import Fobidden from 'components/403.jsx'
 
 export default class CreatePost extends React.PureComponent {
   render() {
-    const result = this.props.postCreationResult
-    const { addPost, authToken } = this.props
+    const { addPost, authToken, result } = this.props
     // 如果已登录，但不是管理员，则提示没有权限
     if (authToken && !authToken.isAdmin) {
       return <Fobidden />

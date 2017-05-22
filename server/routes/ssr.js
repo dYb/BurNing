@@ -1,16 +1,15 @@
-const fs = require('fs')
-const path = require('path')
-const React = require('react')
-const Router = require('koa-router')
-const { promisify } = require('bluebird')
-const { Provider } = require('react-redux')
-const { StaticRouter, matchPath } = require('react-router-dom')
-const { renderToString } = require('react-dom/server')
+import fs from 'fs'
+import path from 'path'
+import React from 'react'
+import Router from 'koa-router'
+import { promisify } from 'bluebird'
+import { Provider } from 'react-redux'
+import { StaticRouter, matchPath } from 'react-router-dom'
+import { renderToString } from 'react-dom/server'
 
-const actions = require('../../src/actions')
-const { default: App } = require('../../src/containers/App')
-const { default: configureStore } = require('../../src/store')
-const { default: routes } = require('../../src/routes')
+import App from 'containers/App'
+import configureStore from 'redux/store'
+import routes from 'src/routes'
 
 const readFile = promisify(fs.readFile)
 const router = new Router()
@@ -25,15 +24,17 @@ router.get('/', async (ctx) => {
     }
     const context = {}
     const store = configureStore({
-      authToken: ctx.state.user
+      auth: {
+        user: ctx.state.user
+      }
     })
     let match = null
     const matchedRoute = routes.find((route) => {
       match = matchPath(ctx.req.url, route)
       return match
     })
-    if (matchedRoute && matchedRoute.onNavigate && typeof actions[matchedRoute.onNavigate] === 'function') {
-      await store.dispatch(actions[matchedRoute.onNavigate](match.params))
+    if (matchedRoute && matchedRoute.onNavigate && typeof matchedRoute.onNavigate === 'function') {
+      await store.dispatch(matchedRoute.onNavigate(match.params))
     }
     const markup = renderToString(
       <Provider store={store}>

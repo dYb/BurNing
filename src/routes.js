@@ -1,19 +1,24 @@
-import Home from './components/Home.jsx'
-import CreatePerson from './components/create-person.jsx'
-import SearchPerson from './components/search-person.jsx'
-import CreatePost from './components/create-post.jsx'
-import PostList from './components/post-list.jsx'
-import Profile from './components/profile.jsx'
-import Login from './components/login.jsx'
-import Post from './components/post.jsx'
+import Home from 'components/home.jsx'
+
+import CreatePerson from 'containers/person/create.jsx'
+import SearchPerson from 'containers/person/search.jsx'
+import Profile from 'containers/person/profile.jsx'
+import * as personActions from 'redux/modules/person'
+
+import Login from 'containers/login'
+import * as authActions from 'redux/modules/auth'
+
+import CreatePost from 'containers/post/create.jsx'
+import PostList from 'containers/post/list.jsx'
+import Post from 'containers/post/content.jsx'
+import * as postActions from 'redux/modules/post'
+
 
 // path: 路由地址
 // name: 标签显示名称，为空时，不在header中显示
 // component: 对应组建
 // isAdmin: 仅Admin可以访问
 // hideWhenLogin: 登录之后隐藏
-// props: 由mapStatetoProps转换
-// actions: 由mapDispatchtoProps转换
 // mapStateToProps: 返回一个函数（参数{ location, match, history }），为connect函数的第一参数
 
 const routes = [
@@ -25,27 +30,39 @@ const routes = [
   },
   {
     path: '/create-person',
+    name: 'Create Person',
     component: CreatePerson,
-    props: ['personCreationResult', 'authToken'],
-    actions: ['addPerson']
+    mapStateToProps: routeProps => state => ({
+      result: state.person.addResult,
+      authToken: state.auth.user
+    }),
+    mapDispatchToProps: routeProps => ({
+      addPerson: personActions['addPerson']
+    })
   }, {
     path: '/search-person',
     name: 'Search Person',
     component: SearchPerson,
-    props: ['searchedPerson'],
-    actions: ['searchPerson']
+    mapStateToProps: routeProps => state => ({
+      result: state.person.searchResult
+    }),
+    mapDispatchToProps: routeProps => ({
+      searchPerson: personActions['searchPerson']
+    })
   }, {
     path: '/login',
     component: Login,
+    hideWhenLogin: true,
     mapStateToProps: routeProps => state => {
       const { location } = routeProps
       return {
-        authToken: state.authToken,
+        authToken: state.auth.uer,
         location
       }
     },
-    actions: ['doLogin'],
-    hideWhenLogin: true
+    mapDispatchToProps: routeProps => ({
+      login: authActions['login']
+    })
   }, {
     path: '/profile/:id',
     component: Profile,
@@ -53,38 +70,50 @@ const routes = [
       const { match: { params: { id } } } = routeProps
       return {
         id: +id,
-        authToken: state.authToken,
-        profile: (state.profile && state.profile[id]) ? state.profile[id] : null
+        authToken: state.auth.user,
+        profile: state.person.profile[id]
       }
     },
-    actions: ['fetchProfile', 'doLogout'],
-    onNavigate: 'fetchProfile'
+    mapDispatchToProps: routeProps => ({
+      fetchProfile: personActions['fetchProfile'],
+      logout: authActions['logout']
+    })
   }, {
     path: '/post/:id',
     component: Post,
     mapStateToProps: routeProps => state => {
-      const { match: { params: { id } }, location } = routeProps
-      const { post } = location.state || { post: { id } }
+      const { match: { params: { id } } } = routeProps
+      const post = state.post.posts[id] || { id: +id }
       return {
-        post: (state.posts && state.posts[id]) ? state.posts[id] : post,
-        authToken: state.authToken,
-        location
+        authToken: state.auth.user,
+        post
       }
     },
-    actions: ['fetchPost'],
-    onNavigate: 'fetchPost'
+    mapDispatchToProps: routeProps => ({
+      fetchPost: postActions['fetchPost']
+    }),
+    onNavigate: postActions['fetchPost']
   }, {
     path: '/create-post',
     component: CreatePost,
-    props: ['authToken', 'postCreationResult'],
-    actions: ['addPost']
+    mapStateToProps: routeProps => state => ({
+      authToken: state.auth.user,
+      result: state.post.addResult
+    }),
+    mapDispatchToProps: routeProps => ({
+      addPost: postActions['addPost']
+    })
   }, {
     path: '/post-list',
     component: PostList,
     name: 'Post List',
-    props: ['postList'],
-    actions: ['fetchPostList'],
-    onNavigate: 'fetchPostList'
+    mapStateToProps: routeProps => state => ({
+      list: state.post.list
+    }),
+    mapDispatchToProps: routeProps => ({
+      fetchPostList: postActions['fetchPostList']
+    }),
+    onNavigate: postActions['fetchPostList']
   }
 ]
 export default routes

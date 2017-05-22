@@ -16,7 +16,6 @@ export default class SearchPerson extends React.PureComponent {
     this.props.searchPerson(data)
   }
   render() {
-    console.log('search')
     return (
       <form>
         <div className="form-group">
@@ -37,10 +36,10 @@ export default class SearchPerson extends React.PureComponent {
           </div>
         </div>
         {
-          this.props.searchedPerson && (
+          this.props.result && (
             <ul className="border">
               {
-                this.props.searchedPerson.map(p => (
+                this.props.result.map(p => (
                   <li key={p.id}>
                     ID: {p.id} name: {p.name} email: {p.email}<br />
                     POST: {p.post}
