@@ -6,7 +6,7 @@ const LOGIN_SUCCESS = 'burning/auth/LOGIN_SUCCESS'
 const LOGIN_FAIL = 'burning/auth/LOGIN_FAIL'
 const LOGOUT = 'burning/auth/LOGOUT'
 
-const initState = {}
+const initState = { user: null }
 // reducer
 export default (state = initState, action = {}) => {
   switch (action.type) {

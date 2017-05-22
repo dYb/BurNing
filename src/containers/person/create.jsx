@@ -1,14 +1,10 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { connect } from 'react-redux'
-
-import { addPerson } from 'redux/modules/person'
 import Fobidden from 'components/403.jsx'
 
-class CreatePerson extends React.PureComponent {
+export default class CreatePerson extends React.PureComponent {
   render() {
-    const result = this.props.personCreationResult
-    const { addPerson, authToken } = this.props
+    const { result, addPerson, authToken } = this.props
     // 如果已登录，但不是管理员，则提示没有权限
     if (authToken && !authToken.isAdmin) {
       return <Fobidden />
@@ -66,7 +62,3 @@ class CreatePerson extends React.PureComponent {
     )
   }
 }
-export default connect(
-  state => ({ result: state.person.addResult }),
-  { addPerson }
-)(CreatePerson)

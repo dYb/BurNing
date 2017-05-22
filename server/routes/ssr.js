@@ -21,7 +21,9 @@ router.get('/', async (ctx) => {
     const html = await readFile(filePath, 'utf8')
     const context = {}
     const store = configureStore({
-      authToken: ctx.state.user
+      auth: {
+        user: ctx.state.user
+      }
     })
     let match = null
     const matchedRoute = routes.find((route) => {

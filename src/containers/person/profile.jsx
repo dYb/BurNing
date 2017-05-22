@@ -10,8 +10,8 @@ export default class Profile extends React.PureComponent {
   }
   render() {
     const { id, authToken, profile, logout } = this.props
-    if (!profile) {
-      return null
+    if (!profile || !profile.name) {
+      return <div>No person</div>
     }
     return (
       <div>

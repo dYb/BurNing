@@ -95,7 +95,7 @@ export function fetchProfile(person) {
       .then(people => {
         dispatch({
           type: PROFILE,
-          result: people[0]
+          result: people[0] || person
         })
         return people
       })
