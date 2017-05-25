@@ -1,9 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { connect } from 'react-redux'
-import { login } from 'redux/modules/auth'
 
-class Login extends React.PureComponent {
+export class Login extends React.PureComponent {
   login = async (e) => {
     e.preventDefault()
     const email = this.email.value
@@ -53,8 +51,3 @@ class Login extends React.PureComponent {
     )
   }
 }
-
-export default connect(
-  state => ({ authToken: state.auth.user }),
-  { login }
-)(Login)

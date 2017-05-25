@@ -48,17 +48,17 @@ export default class CreatePost extends React.PureComponent {
             }}>Reset</button>
           </div>
         </div>
-        {/*{
-          result !== null && (
-            result.created
+        {
+          result && (
+            !result.message
             ? <div className="alert alert-success" role="alert">
-              <strong>Well done!</strong> You successfully create a person.
+              <strong>Well done!</strong> You successfully create a post.
             </div>
             : <div className="alert alert-danger" role="alert">
               <strong>Error!</strong> {result.message}
             </div>
           )
-        }*/}
+        }
       </form>
     )
   }

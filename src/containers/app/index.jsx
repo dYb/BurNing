@@ -16,10 +16,9 @@ import {
 import NotFound from 'components/404.jsx'
 import routes from '../../routes'
 import Header from '../header'
-// import * as actions from '../actions'
 
 // import './app.css'
-const App = () => {
+export default () => {
   return (
     <div>
       <Header />
@@ -41,6 +40,3 @@ const App = () => {
     </div>
   )
 }
-
-export default App
-// export default connect(state => ({ authToken: state.authToken }))(App)

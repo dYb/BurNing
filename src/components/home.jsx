@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Home = () => (
+export default () => (
   <div className="jumbotron">
     <div className="container">
       <h1 className="display-3">Hello, world!</h1>
@@ -9,5 +9,3 @@ const Home = () => (
     </div>
   </div>
 )
-
-export default Home
